@@ -1,0 +1,3 @@
+package woowacourse.kanban.model
+
+data class BoardData(val title: Title, val content: String = "", val tags: Tags, val nickname: Nickname)

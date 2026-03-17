@@ -1,40 +1,33 @@
-This is a Kotlin Multiplatform project targeting Android, Desktop (JVM).
+## 테스트 목록
 
-* [/composeApp](./composeApp/src) is for code that will be shared across your Compose Multiplatform applications.
-  It contains several subfolders:
-  - [commonMain](./composeApp/src/commonMain/kotlin) is for code that’s common for all targets.
-  - Other folders are for Kotlin code that will be compiled for only the platform indicated in the folder name.
-    For example, if you want to use Apple’s CoreCrypto for the iOS part of your Kotlin app,
-    the [iosMain](./composeApp/src/iosMain/kotlin) folder would be the right place for such calls.
-    Similarly, if you want to edit the Desktop (JVM) specific part, the [jvmMain](./composeApp/src/jvmMain/kotlin)
-    folder is the appropriate location.
+#### 단위 테스트
+- [x] 전체 태스크 중 Done 상태의 비율로 완료율을 계산해야 한다.
+- [x] 태스크가 상태에 맞는 컬럼에 분류되어야 한다.
 
-### Build and Run Android Application
+#### UI 테스트
+- [x] 새 태스크 생성 버튼을 누르면 생성 다이얼로그가 열려야 한다.
+- [x] 생성 다이얼로그에서 정상적인 값들을 입력 후 생성 버튼을 누르면 칸반 보드 리스트에 표시되어야 한다.
 
-To build and run the development version of the Android app, use the run configuration from the run widget
-in your IDE’s toolbar or build it directly from the terminal:
-- on macOS/Linux
-  ```shell
-  ./gradlew :composeApp:assembleDebug
-  ```
-- on Windows
-  ```shell
-  .\gradlew.bat :composeApp:assembleDebug
-  ```
+## UI 목록
 
-### Build and Run Desktop (JVM) Application
+### 칸반 보드 헤더
+ - [x] 타이틀
+ - [x] 진행도
+ - [x] 프로그레스 바
+ - [x] 새 태스트 생성 버튼
 
-To build and run the development version of the desktop app, use the run configuration from the run widget
-in your IDE’s toolbar or run it directly from the terminal:
-- on macOS/Linux
-  ```shell
-  ./gradlew :composeApp:run
-  ```
-- on Windows
-  ```shell
-  .\gradlew.bat :composeApp:run
-  ```
+### 칸반 보드 리스트
+ - [x] 타이틀 로우
+   - 상태명
+   - 카드 갯수
+ - [x] 카드 목록
 
----
+### 기타
+ - [x] 스낵바
 
-Learn more about [Kotlin Multiplatform](https://www.jetbrains.com/help/kotlin-multiplatform-dev/get-started.html)…
+## 기능 목록
+- [x] 칸반 보드에 3개 컬럼(To Do, In Progress, Done)을 표시한다.
+- [x] 각 컬럼 헤더에 해당 상태의 태스크 개수를 뱃지로 표시한다.
+- [x] 완료율에 따라 프로그레스 바를 채운다.
+- [x] 태스크를 생성하면 스낵바로 알림을 띄운다.
+
