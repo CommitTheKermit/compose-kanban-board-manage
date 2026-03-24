@@ -53,7 +53,7 @@ class BoardStateTest {
             ),
         )
 
-        val state = BoardState(backgroundScope, tasks)
+        val state = BoardState(backgroundScope, tasks, KanbanProject(mutableListOf()))
         // when : 완료율을 계산하면
         val result: Double = state.progress
 
@@ -98,7 +98,7 @@ class BoardStateTest {
         )
 
         // when : 컬럼들을 분류하면 TO_DO, IN_PROGRESS, DONE 상태 별로 리스트에 배치되어야 한다.
-        val state = BoardState(backgroundScope, tasks)
+        val state = BoardState(backgroundScope, tasks, KanbanProject(mutableListOf()))
 
         // then : TO_DO, IN_PROGRESS, DONE 카드 리스트 각각 하나씩 존재해야 한다
         assertEquals(
