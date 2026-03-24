@@ -39,6 +39,9 @@ class BoardState(val scope: CoroutineScope, initTasks: List<KanbanTask> = emptyL
     fun addTask(task: KanbanTask) {
         distributeTask(task)
 
-        scope.launch { snackbarHostState.showSnackbar("새로운 태스크가 추가되었습니다.") }
+        scope.launch {
+            snackbarHostState.currentSnackbarData?.dismiss()
+            snackbarHostState.showSnackbar("새로운 태스크가 추가되었습니다.")
+        }
     }
 }
