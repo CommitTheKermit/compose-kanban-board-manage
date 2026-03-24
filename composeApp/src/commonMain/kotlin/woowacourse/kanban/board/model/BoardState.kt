@@ -44,4 +44,13 @@ class BoardState(val scope: CoroutineScope, initTasks: List<KanbanTask> = emptyL
             snackbarHostState.showSnackbar("새로운 태스크가 추가되었습니다.")
         }
     }
+
+    fun changeStatus(
+        task: KanbanTask,
+        status: TaskStatus,
+    ): KanbanTask {
+        val newTask = KanbanTask(task.data, status)
+
+        return newTask
+    }
 }
