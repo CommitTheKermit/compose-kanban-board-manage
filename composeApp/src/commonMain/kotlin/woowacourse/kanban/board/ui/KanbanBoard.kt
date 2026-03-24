@@ -16,6 +16,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import kotlin.collections.listOf
 import woowacourse.kanban.board.model.BoardState
+import woowacourse.kanban.board.model.KanbanProject
 import woowacourse.kanban.create.ui.TaskCreateDialog
 import woowacourse.kanban.model.Assignee
 import woowacourse.kanban.model.KanbanTask
@@ -29,7 +30,7 @@ fun KanbanBoard(
     initTasks: List<KanbanTask> = emptyList(),
 ) {
     val scope = rememberCoroutineScope()
-    val state = remember { BoardState(scope, initTasks) }
+    val state = remember { BoardState(scope, initTasks, KanbanProject(mutableListOf())) }
 
     Scaffold(
         snackbarHost = {
