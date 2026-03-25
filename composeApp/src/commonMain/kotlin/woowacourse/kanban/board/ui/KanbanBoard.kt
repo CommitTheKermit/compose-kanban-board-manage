@@ -10,15 +10,9 @@ import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SnackbarHost
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateMapOf
-import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.geometry.Offset
-import androidx.compose.ui.geometry.Rect
 import androidx.compose.ui.unit.dp
 import woowacourse.kanban.board.model.BoardState
 import woowacourse.kanban.board.model.KanbanProject
@@ -45,10 +39,6 @@ fun KanbanBoard(
     val scope = rememberCoroutineScope()
     val state = remember { BoardState(scope, project) }
 
-    var draggedTask by remember { mutableStateOf<KanbanTask?>(null) }
-    var currentDragPosition by remember { mutableStateOf<Offset?>(null) }
-    val columnBounds = remember { mutableStateMapOf<TaskStatus, Rect>() }
-
     Scaffold(
         snackbarHost = {
             SnackbarHost(state.snackbarHostState, modifier = Modifier.offset(y = (-50).dp)) { data ->
@@ -74,21 +64,21 @@ fun KanbanBoard(
                         status = status,
                         modifier = Modifier.weight(1f),
                         getIsDropTarget = {
-                            currentDragPosition?.let { columnBounds[status]?.contains(it) }
+                            state.currentDragPosition?.let { state.columnBounds[status]?.contains(it) }
                                 ?: false
                         },
-                        onBoundsChanged = { rect -> columnBounds[status] = rect },
+                        onBoundsChanged = { rect -> state.columnBounds[status] = rect },
                         onTaskDragStart = { task ->
-                            draggedTask = task
+                            state.draggedTask = task
                         },
-                        onTaskDragChange = { pos -> currentDragPosition = pos },
+                        onTaskDragChange = { pos -> state.currentDragPosition = pos },
                         onTaskDragEnd = {
-                            val dropPosition = currentDragPosition
+                            val dropPosition = state.currentDragPosition
                                 ?: return@StatusCardList
-                            val targetStatus = columnBounds.entries
+                            val targetStatus = state.columnBounds.entries
                                 .firstOrNull { (_, rect) -> rect.contains(dropPosition) }?.key
 
-                            draggedTask?.let { task ->
+                            state.draggedTask?.let { task ->
                                 if (targetStatus != null && task.status != targetStatus) {
                                     val idx = state.totalTasksGetter().indexOfFirst { it.data.id == task.data.id }
                                     if (idx != -1) {
@@ -97,12 +87,12 @@ fun KanbanBoard(
                                     }
                                 }
                             }
-                            currentDragPosition = null
-                            draggedTask = null
+                            state.currentDragPosition = null
+                            state.draggedTask = null
                         },
                         onTaskDragCancel = {
-                            currentDragPosition = null
-                            draggedTask = null
+                            state.currentDragPosition = null
+                            state.draggedTask = null
                         },
                     )
                 }

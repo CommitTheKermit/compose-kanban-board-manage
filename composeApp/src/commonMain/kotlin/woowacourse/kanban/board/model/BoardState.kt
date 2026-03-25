@@ -3,7 +3,11 @@ package woowacourse.kanban.board.model
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateMapOf
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.setValue
+import androidx.compose.ui.geometry.Offset
+import androidx.compose.ui.geometry.Rect
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 import woowacourse.kanban.model.KanbanTask
@@ -27,6 +31,10 @@ class BoardState(val scope: CoroutineScope, val project: KanbanProject) {
 
     val showDialog = mutableStateOf(false)
     val snackbarHostState = SnackbarHostState()
+
+    var draggedTask by mutableStateOf<KanbanTask?>(null)
+    var currentDragPosition by mutableStateOf<Offset?>(null)
+    val columnBounds = mutableStateMapOf<TaskStatus, Rect>()
 
     fun distributeTask(task: KanbanTask) {
         totalTasks.add(task)
