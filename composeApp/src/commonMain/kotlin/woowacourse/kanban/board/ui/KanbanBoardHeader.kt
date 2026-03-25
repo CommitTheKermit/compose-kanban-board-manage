@@ -33,6 +33,7 @@ fun KanbanBoardHeader(
     totalTaskCount: Int,
     onClick: () -> Unit,
     modifier: Modifier = Modifier,
+    headerTitle: String = "",
 ) {
     Column(
         modifier = modifier
@@ -42,7 +43,7 @@ fun KanbanBoardHeader(
         Row(horizontalArrangement = Arrangement.SpaceBetween, modifier = Modifier.fillMaxWidth()) {
             Column {
                 Text(
-                    "Compose Desktop 칸반 보드",
+                    headerTitle,
                     fontSize = 24.sp,
                 )
                 Spacer(modifier = Modifier.height(4.5.dp))
