@@ -1,4 +1,4 @@
-package woowacourse.kanban.board.ui
+package woowacourse.kanban.board.ui.stateholder
 
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.runtime.derivedStateOf

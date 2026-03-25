@@ -21,6 +21,7 @@ import androidx.compose.ui.unit.dp
 import woowacourse.kanban.board.model.KanbanProject
 import woowacourse.kanban.board.model.TaskManager
 import woowacourse.kanban.board.ui.constant.SnackBarText
+import woowacourse.kanban.board.ui.stateholder.BoardState
 import woowacourse.kanban.create.ui.TaskCreateDialog
 import woowacourse.kanban.model.Assignee
 import woowacourse.kanban.model.KanbanTask
