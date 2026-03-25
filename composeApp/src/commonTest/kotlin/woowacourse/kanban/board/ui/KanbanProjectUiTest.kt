@@ -1,6 +1,7 @@
 package woowacourse.kanban.board.ui
 
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SnackbarHost
@@ -17,6 +18,7 @@ import androidx.compose.ui.test.onNodeWithTag
 import androidx.compose.ui.test.onNodeWithText
 import androidx.compose.ui.test.performClick
 import androidx.compose.ui.test.runComposeUiTest
+import androidx.compose.ui.unit.dp
 import kotlin.test.Test
 import woowacourse.kanban.board.model.BoardState
 import woowacourse.kanban.board.ui.constant.MockData
@@ -99,7 +101,11 @@ class KanbanProjectUiTest {
             }
 
             Scaffold(
-                snackbarHost = { SnackbarHost(snackBarHostState) },
+                snackbarHost = {
+                    SnackbarHost(snackBarHostState, modifier = Modifier.offset(y = (-50).dp)) { data ->
+                        KanbanSnackBar(data)
+                    }
+                },
             ) { innerPadding ->
                 Box(modifier = Modifier.padding(innerPadding))
             }
