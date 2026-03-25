@@ -1,4 +1,4 @@
-package woowacourse.kanban.board.model
+package woowacourse.kanban.board.ui
 
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.runtime.derivedStateOf
@@ -6,11 +6,15 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
-import woowacourse.kanban.board.ui.constant.SnackBarText
+import woowacourse.kanban.board.model.KanbanProject
 import woowacourse.kanban.model.KanbanTask
 import woowacourse.kanban.model.TaskStatus
 
-class BoardState(val scope: CoroutineScope, val project: KanbanProject, val snackBarHostState: SnackbarHostState = SnackbarHostState()) {
+class BoardState(
+    private val scope: CoroutineScope,
+    project: KanbanProject,
+    private val snackBarHostState: SnackbarHostState = SnackbarHostState(),
+) {
 
     private val totalTasks: MutableList<KanbanTask> = project.tasks
 
@@ -28,34 +32,14 @@ class BoardState(val scope: CoroutineScope, val project: KanbanProject, val snac
 
     val showDialog = mutableStateOf(false)
 
-    fun distributeTask(task: KanbanTask) {
-        totalTasks.add(task)
-    }
-
-    fun addTask(task: KanbanTask) {
-        distributeTask(task)
-
-        scope.launch {
-            snackBarHostState.currentSnackbarData?.dismiss()
-            snackBarHostState.showSnackbar(SnackBarText.CREATE_TASK)
-        }
-    }
-
-    fun changeStatus(
-        task: KanbanTask,
-        status: TaskStatus,
-        idx: Int,
-    ) {
-
-        totalTasks[idx] = task.copy(status = status)
-
-        scope.launch {
-            snackBarHostState.currentSnackbarData?.dismiss()
-            snackBarHostState.showSnackbar(SnackBarText.EDIT_TASK)
-        }
-    }
-
     fun totalTasksGetter(): MutableList<KanbanTask> {
         return totalTasks
+    }
+
+    fun showKanbanSnackBar(message: String) {
+        scope.launch {
+            snackBarHostState.currentSnackbarData?.dismiss()
+            snackBarHostState.showSnackbar(message)
+        }
     }
 }

@@ -18,8 +18,9 @@ import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.geometry.Rect
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import woowacourse.kanban.board.model.BoardState
 import woowacourse.kanban.board.model.KanbanProject
+import woowacourse.kanban.board.model.TaskManager
+import woowacourse.kanban.board.ui.constant.SnackBarText
 import woowacourse.kanban.create.ui.TaskCreateDialog
 import woowacourse.kanban.model.Assignee
 import woowacourse.kanban.model.KanbanTask
@@ -42,9 +43,9 @@ fun KanbanBoard(
     snackbarHostState: SnackbarHostState = SnackbarHostState(),
 ) {
     val scope = rememberCoroutineScope()
-    val state = remember(project) {
-        BoardState(scope, project, snackbarHostState)
-    }
+
+    val state = remember(project) { BoardState(scope, project, snackbarHostState) }
+    val action = remember(state) { TaskManager(project.tasks) }
 
     var draggedTask by remember { mutableStateOf<KanbanTask?>(null) }
     var currentDragPosition by remember { mutableStateOf<Offset?>(null) }
@@ -86,11 +87,12 @@ fun KanbanBoard(
                             if (targetStatus != null && task.status != targetStatus) {
                                 val idx = state.totalTasksGetter().indexOfFirst { it.data.id == task.data.id }
                                 if (idx != -1) {
-                                    state.changeStatus(
+                                    action.changeStatus(
                                         task = state.totalTasksGetter()[idx],
                                         status = targetStatus,
                                         idx = idx,
                                     )
+                                    state.showKanbanSnackBar(SnackBarText.EDIT_TASK)
                                 }
                             }
                         }
@@ -109,7 +111,10 @@ fun KanbanBoard(
     if (state.showDialog.value) {
         TaskCreateDialog(
             onDismiss = { state.showDialog.value = false },
-            onCreateTask = { task -> state.addTask(task) },
+            onCreateTask = { task ->
+                action.addTask(task)
+                state.showKanbanSnackBar(SnackBarText.CREATE_TASK)
+            },
             assignees = listOf(
                 Assignee(
                     Nickname(
