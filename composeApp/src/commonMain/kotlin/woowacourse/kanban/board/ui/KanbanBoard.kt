@@ -82,8 +82,11 @@ fun KanbanBoard(
                                 if (targetStatus != null && task.status != targetStatus) {
                                     val idx = state.totalTasksGetter().indexOfFirst { it.data.id == task.data.id }
                                     if (idx != -1) {
-                                        state.totalTasksGetter()[idx] = state.totalTasksGetter()[idx].copy(status = targetStatus)
-                                        print("")
+                                        state.changeStatus(
+                                            task = state.totalTasksGetter()[idx],
+                                            status = targetStatus,
+                                            idx = idx,
+                                        )
                                     }
                                 }
                             }

@@ -52,15 +52,15 @@ class BoardState(val scope: CoroutineScope, val project: KanbanProject) {
     fun changeStatus(
         task: KanbanTask,
         status: TaskStatus,
-    ): KanbanTask {
-        val newTask = KanbanTask(task.data, status)
+        idx: Int,
+    ) {
+
+        totalTasks[idx] = task.copy(status = status)
 
         scope.launch {
             snackbarHostState.currentSnackbarData?.dismiss()
             snackbarHostState.showSnackbar("태스크가 이동되었습니다.")
         }
-
-        return newTask
     }
 
     fun totalTasksGetter(): MutableList<KanbanTask> {

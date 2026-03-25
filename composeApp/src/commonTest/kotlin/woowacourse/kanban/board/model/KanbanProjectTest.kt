@@ -43,11 +43,11 @@ class KanbanProjectTest {
             status = TaskStatus.IN_PROGRESS,
         )
 
-        val project = KanbanProject(mutableListOf())
+        val project = KanbanProject(mutableListOf(task))
         val state = BoardState(backgroundScope, project = project)
 
-        task = state.changeStatus(task, TaskStatus.DONE)
+        state.changeStatus(task, TaskStatus.DONE, idx = 0)
 
-        assertEquals(TaskStatus.DONE, task.status)
+        assertEquals(TaskStatus.DONE, state.totalTasksGetter().first().status)
     }
 }
