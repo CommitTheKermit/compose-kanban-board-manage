@@ -10,6 +10,7 @@ import androidx.compose.ui.test.onNodeWithText
 import androidx.compose.ui.test.performClick
 import androidx.compose.ui.test.runComposeUiTest
 import kotlin.test.Test
+import woowacourse.kanban.board.ui.constant.MockData
 
 @OptIn(ExperimentalTestApi::class)
 class KanbanProjectUiTest {
@@ -46,5 +47,26 @@ class KanbanProjectUiTest {
 
         // then : 보드의 제목이 선택된 프로젝트의 이름으로 변경되어야 한다
         onNodeWithTag("headerTitle").assert(hasText("Compose2"))
+    }
+
+    @Test
+    fun `사이드바에 프로젝트 리스트가 출력되어야 한다`() = runComposeUiTest {
+        // given : 목 데이터가 주어진다
+        val mock =
+            MockData.MOCK_PROJECTS
+
+        // when : 사이드바에 프로젝트 리스트가 표시될 때
+        setContent {
+            KanbanSidebar(
+                projects = mock,
+                onClick = { },
+                selectedProjectIndex = 0,
+            )
+        }
+
+        // then : 입력된 프로젝트들의 제목이 사이드바에 표시된다
+        onNodeWithText("Compose1").assertExists()
+        onNodeWithText("Compose2").assertExists()
+        onNodeWithText("compose3 너무너무 길어진 프로젝트 이름").assertExists()
     }
 }
