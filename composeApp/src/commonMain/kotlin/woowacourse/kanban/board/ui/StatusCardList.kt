@@ -75,7 +75,6 @@ fun StatusCardList(
     onTaskDragEnd: () -> Unit = {},
     onTaskDragCancel: () -> Unit = {},
 ) {
-
     val isDropTarget by remember { derivedStateOf { getIsDropTarget() } }
     val lastBoundsHolder = remember { mutableStateOf<Rect?>(null) }
 
@@ -95,7 +94,8 @@ fun StatusCardList(
                 }
             }
             .then(
-                if (isDropTarget) modifier.border(2.dp, status.bgColor, RoundedCornerShape(12.dp)) else modifier,
+                if (isDropTarget)
+                    modifier.border(2.dp, Color.Red, RoundedCornerShape(12.dp)) else modifier,
             ),
 
     ) {
@@ -138,7 +138,7 @@ fun StatusCardList(
                 .fillMaxWidth(),
 
         ) {
-            items(tasks.size) {
+            items(count = tasks.size, key = { tasks[it].data.id }) {
                 KanbanCard(
                     tasks[it].data,
                     onDragStart = {
