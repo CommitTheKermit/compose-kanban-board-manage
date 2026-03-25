@@ -21,6 +21,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.DpOffset
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import woowacourse.kanban.Colors
 
 @Composable
 fun ProjectItem(
@@ -30,15 +31,15 @@ fun ProjectItem(
     onClick: () -> Unit = {},
 ) {
 
-    val bgColor = if (isSelected) Color(0xffEEf2ff) else Color.Transparent
-    val textColor = if (isSelected) Color(0xff432dd7) else Color(0xff364153)
+    val bgColor = if (isSelected) Colors.SecondarySelectedBg else Color.Transparent
+    val textColor = if (isSelected) Colors.ProjectSelectedText else Colors.PrimaryText
     OutlinedButton(
         onClick = { onClick() },
         shape = RoundedCornerShape(10.dp),
         contentPadding = PaddingValues(vertical = 12.dp, horizontal = 15.dp),
         border = if (isSelected) BorderStroke(
             width = 1.dp,
-            color = Color(0xffe5e7eb),
+            color = Colors.PrimaryBorder,
         ) else null,
         colors = ButtonColors(
             containerColor = bgColor,
@@ -54,7 +55,7 @@ fun ProjectItem(
                     modifier.dropShadow(
                         shape = RoundedCornerShape(10.dp),
                         shadow = Shadow(
-                            10.dp, spread = 0.dp, color = Color(0x1a000000),
+                            10.dp, spread = 0.dp, color = Colors.ProjectShadow,
                             offset = DpOffset(0.dp, 12.dp),
                         ),
                     ) else modifier,

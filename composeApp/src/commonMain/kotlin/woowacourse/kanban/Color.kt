@@ -55,4 +55,15 @@ object Colors {
     val StatusListBorderToDo = Color(0xFFBEDBFF)
     val StatusListBorderInProgress = Color(0xFFFEE685)
     val StatusListBorderDone = Color(0xFFB9F8CF)
+
+    // 프로젝트 아이템
+    val ProjectSelectedText = Color(0xFF432DD7)
+    val ProjectShadow = Color(0x1A000000)
+
+    // 드롭 타겟
+    val DropTargetBorder = Color.Red
+
+    // 기본 색상
+    val OnSurface = Color.Black
+    val Surface = Color.White
 }
