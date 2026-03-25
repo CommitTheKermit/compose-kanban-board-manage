@@ -48,6 +48,7 @@ fun KanbanCard(
     onDragCancel: () -> Unit = {},
 ) {
     var cardWindowPosition by remember { mutableStateOf(Offset.Zero) }
+
     Box(
         modifier = modifier
             .width(270.dp)

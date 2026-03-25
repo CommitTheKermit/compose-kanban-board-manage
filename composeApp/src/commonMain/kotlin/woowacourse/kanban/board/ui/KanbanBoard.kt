@@ -20,7 +20,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.geometry.Rect
 import androidx.compose.ui.unit.dp
-import kotlin.collections.listOf
 import woowacourse.kanban.board.model.BoardState
 import woowacourse.kanban.board.model.KanbanProject
 import woowacourse.kanban.create.ui.TaskCreateDialog
@@ -28,6 +27,14 @@ import woowacourse.kanban.model.Assignee
 import woowacourse.kanban.model.KanbanTask
 import woowacourse.kanban.model.Nickname
 import woowacourse.kanban.model.TaskStatus
+
+private fun TaskStatus.tasks(state: BoardState): List<KanbanTask> {
+    return when (this) {
+        TaskStatus.TO_DO -> state.todoCardList
+        TaskStatus.IN_PROGRESS -> state.inProgressCardList
+        TaskStatus.DONE -> state.doneCardList
+    }
+}
 
 @OptIn(ExperimentalMaterial3ExpressiveApi::class)
 @Composable
@@ -61,108 +68,44 @@ fun KanbanBoard(
                 horizontalArrangement = Arrangement.spacedBy(16.dp),
                 modifier = Modifier.fillMaxWidth(0.75f),
             ) {
-                StatusCardList(
-                    tasks = state.todoCardList,
-                    status = TaskStatus.TO_DO,
-                    modifier = Modifier.weight(1f),
-                    getIsDropTarget = {
-                        currentDragPosition?.let { columnBounds[TaskStatus.TO_DO]?.contains(it) }
-                            ?: false
-                    },
-                    onBoundsChanged = { rect -> columnBounds[TaskStatus.TO_DO] = rect },
-                    onTaskDragStart = { task -> draggedTask = task },
-                    onTaskDragChange = { pos -> currentDragPosition = pos },
-                    onTaskDragEnd = {
-                        val dropPosition = currentDragPosition
-                            ?: return@StatusCardList
-                        val targetStatus = columnBounds.entries
-                            .firstOrNull { (_, rect) -> rect.contains(dropPosition) }?.key
+                TaskStatus.entries.forEach { status ->
+                    StatusCardList(
+                        tasks = status.tasks(state),
+                        status = status,
+                        modifier = Modifier.weight(1f),
+                        getIsDropTarget = {
+                            currentDragPosition?.let { columnBounds[status]?.contains(it) }
+                                ?: false
+                        },
+                        onBoundsChanged = { rect -> columnBounds[status] = rect },
+                        onTaskDragStart = { task ->
+                            draggedTask = task
+                        },
+                        onTaskDragChange = { pos -> currentDragPosition = pos },
+                        onTaskDragEnd = {
+                            val dropPosition = currentDragPosition
+                                ?: return@StatusCardList
+                            val targetStatus = columnBounds.entries
+                                .firstOrNull { (_, rect) -> rect.contains(dropPosition) }?.key
 
-                        draggedTask?.let { task ->
-                            if (targetStatus != null && task.status != targetStatus) {
-                                val idx = state.todoCardList.indexOfFirst { it.data.title == task.data.title }
-                                if (idx != -1) {
-                                    state.totalTasksGetter()[idx] = state.todoCardList[idx].copy(status = targetStatus)
-                                    print("")
+                            draggedTask?.let { task ->
+                                if (targetStatus != null && task.status != targetStatus) {
+                                    val idx = state.totalTasksGetter().indexOfFirst { it.data.id == task.data.id }
+                                    if (idx != -1) {
+                                        state.totalTasksGetter()[idx] = state.totalTasksGetter()[idx].copy(status = targetStatus)
+                                        print("")
+                                    }
                                 }
                             }
-                        }
-                        currentDragPosition = null
-                        draggedTask = null
-                    },
-                    onTaskDragCancel = {
-                        currentDragPosition = null
-                        draggedTask = null
-                    },
-                )
-                StatusCardList(
-                    tasks = state.inProgressCardList,
-                    status = TaskStatus.IN_PROGRESS,
-                    modifier = Modifier.weight(1f),
-                    getIsDropTarget = {
-                        currentDragPosition?.let { columnBounds[TaskStatus.IN_PROGRESS]?.contains(it) }
-                            ?: false
-                    },
-                    onBoundsChanged = { rect -> columnBounds[TaskStatus.IN_PROGRESS] = rect },
-                    onTaskDragStart = { task -> draggedTask = task },
-                    onTaskDragChange = { pos -> currentDragPosition = pos },
-                    onTaskDragEnd = {
-                        val dropPosition = currentDragPosition
-                            ?: return@StatusCardList
-                        val targetStatus = columnBounds.entries
-                            .firstOrNull { (_, rect) -> rect.contains(dropPosition) }?.key
-
-                        draggedTask?.let { task ->
-                            if (targetStatus != null && task.status != targetStatus) {
-                                val idx = state.totalTasksGetter().indexOfFirst { it.data.title == task.data.title }
-                                if (idx != -1) {
-                                    state.totalTasksGetter()[idx] = state.totalTasksGetter()[idx].copy(status = targetStatus)
-                                    print("")
-                                }
-                            }
-                        }
-                        currentDragPosition = null
-                        draggedTask = null
-                    },
-                    onTaskDragCancel = {
-                        currentDragPosition = null
-                        draggedTask = null
-                    },
-                )
-                StatusCardList(
-                    tasks = state.doneCardList,
-                    status = TaskStatus.DONE,
-                    modifier = Modifier.weight(1f),
-                    getIsDropTarget = {
-                        currentDragPosition?.let { columnBounds[TaskStatus.DONE]?.contains(it) }
-                            ?: false
-                    },
-                    onBoundsChanged = { rect -> columnBounds[TaskStatus.DONE] = rect },
-                    onTaskDragStart = { task -> draggedTask = task },
-                    onTaskDragChange = { pos -> currentDragPosition = pos },
-                    onTaskDragEnd = {
-                        val dropPosition = currentDragPosition
-                            ?: return@StatusCardList
-                        val targetStatus = columnBounds.entries
-                            .firstOrNull { (_, rect) -> rect.contains(dropPosition) }?.key
-
-                        draggedTask?.let { task ->
-                            if (targetStatus != null && task.status != targetStatus) {
-                                val idx = state.totalTasksGetter().indexOfFirst { it.data.title == task.data.title }
-                                if (idx != -1) {
-                                    state.totalTasksGetter()[idx] = state.totalTasksGetter()[idx].copy(status = targetStatus)
-                                    print("")
-                                }
-                            }
-                        }
-                        currentDragPosition = null
-                        draggedTask = null
-                    },
-                    onTaskDragCancel = {
-                        currentDragPosition = null
-                        draggedTask = null
-                    },
-                )
+                            currentDragPosition = null
+                            draggedTask = null
+                        },
+                        onTaskDragCancel = {
+                            currentDragPosition = null
+                            draggedTask = null
+                        },
+                    )
+                }
             }
         }
     }
@@ -184,7 +127,6 @@ fun KanbanBoard(
                 ),
             ),
             modifier = Modifier,
-
         )
     }
 }
