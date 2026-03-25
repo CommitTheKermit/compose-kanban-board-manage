@@ -1,18 +1,15 @@
-package woowacourse.kanban.create.model
+package woowacourse.kanban.create.ui.stateholder
 
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
+import woowacourse.kanban.create.model.TaskCreateAction
 import woowacourse.kanban.model.Assignee
-import woowacourse.kanban.model.BoardData
 import woowacourse.kanban.model.KanbanTask
-import woowacourse.kanban.model.Tags
-import woowacourse.kanban.model.TaskStatus
-import woowacourse.kanban.model.Title
 
-class TaskCreateState {
+class TaskCreateState(private val action: TaskCreateAction = TaskCreateAction()) {
     var titleInputValue by mutableStateOf("")
         private set
     var contentInputValue by mutableStateOf("")
@@ -54,9 +51,9 @@ class TaskCreateState {
     }
 
     fun onCreateValidate(): Boolean {
-        isTitleError = titleInputValue.isEmpty()
-        val tags = tagInputValue.split(",")
-        isTagError = tags.size > 5 || tags.any { it.length > 5 }
+        val result = action.validate(titleInputValue, tagInputValue)
+        isTitleError = result.isTitleError
+        isTagError = result.isTagError
 
         if (isTitleError) titleInputValue = ""
         if (isTagError) tagInputValue = ""
@@ -65,21 +62,12 @@ class TaskCreateState {
     }
 
     fun taskCreate(assignee: Assignee): KanbanTask {
-        val task = KanbanTask(
-            data = BoardData(
-                title = Title(titleInputValue),
-                content = contentInputValue,
-                tags = Tags(
-                    if (tagInputValue.isNotBlank())
-                        tagInputValue.split(",")
-                    else
-                        emptyList(),
-                ),
-                nickname = assignee.nickname,
-            ),
-            status = TaskStatus.entries[(selectedStatusIndex)],
+        return action.createTask(
+            title = titleInputValue,
+            content = contentInputValue,
+            tags = tagInputValue,
+            statusIndex = selectedStatusIndex,
+            assignee = assignee,
         )
-
-        return task
     }
 }
