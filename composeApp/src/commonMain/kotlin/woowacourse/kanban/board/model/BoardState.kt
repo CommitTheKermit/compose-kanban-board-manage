@@ -10,6 +10,7 @@ import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.geometry.Rect
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
+import woowacourse.kanban.board.ui.constant.SnackBarText
 import woowacourse.kanban.model.KanbanTask
 import woowacourse.kanban.model.TaskStatus
 
@@ -45,7 +46,7 @@ class BoardState(val scope: CoroutineScope, val project: KanbanProject) {
 
         scope.launch {
             snackbarHostState.currentSnackbarData?.dismiss()
-            snackbarHostState.showSnackbar("새로운 태스크가 추가되었습니다.")
+            snackbarHostState.showSnackbar(SnackBarText.CREATE_TASK)
         }
     }
 
@@ -59,7 +60,7 @@ class BoardState(val scope: CoroutineScope, val project: KanbanProject) {
 
         scope.launch {
             snackbarHostState.currentSnackbarData?.dismiss()
-            snackbarHostState.showSnackbar("태스크가 이동되었습니다.")
+            snackbarHostState.showSnackbar(SnackBarText.EDIT_TASK)
         }
     }
 
