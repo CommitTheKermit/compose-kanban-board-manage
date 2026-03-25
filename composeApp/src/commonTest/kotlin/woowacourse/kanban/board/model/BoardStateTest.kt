@@ -1,8 +1,10 @@
 package woowacourse.kanban.board.model
 
+import androidx.compose.material3.SnackbarHostState
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlinx.coroutines.test.runTest
+import woowacourse.kanban.board.ui.BoardState
 import woowacourse.kanban.model.BoardData
 import woowacourse.kanban.model.KanbanTask
 import woowacourse.kanban.model.Nickname
@@ -53,9 +55,16 @@ class BoardStateTest {
             ),
         )
 
+        val project = KanbanProject(tasks.toMutableList())
         val state = BoardState(
-            backgroundScope, KanbanProject(tasks.toMutableList()),
+            scope = backgroundScope,
+            project = project,
+            snackBarHostState = SnackbarHostState(),
         )
+        val action =
+            TaskManager(
+                project.tasks,
+            )
         // when : 완료율을 계산하면
         val result: Double = state.progress
 
@@ -100,7 +109,17 @@ class BoardStateTest {
         )
 
         // when : 컬럼들을 분류하면 TO_DO, IN_PROGRESS, DONE 상태 별로 리스트에 배치되어야 한다.
-        val state = BoardState(backgroundScope, KanbanProject(tasks.toMutableList()))
+
+        val project = KanbanProject(tasks.toMutableList())
+        val state = BoardState(
+            scope = backgroundScope,
+            project = project,
+            snackBarHostState = SnackbarHostState(),
+        )
+        val action =
+            TaskManager(
+                project.tasks,
+            )
 
         // then : TO_DO, IN_PROGRESS, DONE 카드 리스트 각각 하나씩 존재해야 한다
         assertEquals(

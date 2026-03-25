@@ -1,8 +1,10 @@
 package woowacourse.kanban.board.model
 
+import androidx.compose.material3.SnackbarHostState
 import kotlin.test.assertEquals
 import kotlinx.coroutines.test.runTest
 import org.junit.Test
+import woowacourse.kanban.board.ui.BoardState
 import woowacourse.kanban.model.BoardData
 import woowacourse.kanban.model.KanbanTask
 import woowacourse.kanban.model.Nickname
@@ -14,9 +16,18 @@ class KanbanProjectTest {
     @Test
     fun `새 태스크를 생성했을 때 현재 프로젝트에 삽입되어야 한다`() = runTest {
         val project = KanbanProject(mutableListOf())
-        val state = BoardState(backgroundScope, project = project)
 
-        state.addTask(
+        val state = BoardState(
+            scope = backgroundScope,
+            project = project,
+            snackBarHostState = SnackbarHostState(),
+        )
+        val action =
+            TaskManager(
+                project.tasks,
+            )
+
+        action.addTask(
             KanbanTask(
                 data = BoardData(
                     title = Title("제목"),
@@ -44,9 +55,18 @@ class KanbanProjectTest {
         )
 
         val project = KanbanProject(mutableListOf(task))
-        val state = BoardState(backgroundScope, project = project)
 
-        state.changeStatus(task, TaskStatus.DONE, idx = 0)
+        val state = BoardState(
+            scope = backgroundScope,
+            project = project,
+            snackBarHostState = SnackbarHostState(),
+        )
+        val action =
+            TaskManager(
+                project.tasks,
+            )
+
+        action.changeStatus(task, TaskStatus.DONE, idx = 0)
 
         assertEquals(TaskStatus.DONE, state.totalTasksGetter().first().status)
     }

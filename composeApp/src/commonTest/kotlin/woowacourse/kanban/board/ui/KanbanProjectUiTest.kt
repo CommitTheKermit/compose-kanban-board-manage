@@ -20,7 +20,7 @@ import androidx.compose.ui.test.performClick
 import androidx.compose.ui.test.runComposeUiTest
 import androidx.compose.ui.unit.dp
 import kotlin.test.Test
-import woowacourse.kanban.board.model.BoardState
+import woowacourse.kanban.board.model.TaskManager
 import woowacourse.kanban.board.ui.constant.MockData
 import woowacourse.kanban.board.ui.constant.SnackBarText
 import woowacourse.kanban.model.TaskStatus
@@ -85,20 +85,24 @@ class KanbanProjectUiTest {
 
     @Test
     fun `상태를 변경 했을 때 스낵바가 출력되어야 한다`() = runComposeUiTest {
-        // given : snackBarHostState를 설정한 Scaffold와 BoardState가 주어진다.
+        // given : snackBarHostState를 설정한 Scaffold와 BoardAction가 주어진다.
+        lateinit var action: TaskManager
         lateinit var state: BoardState
 
         setContent {
             val scope = rememberCoroutineScope()
             val snackBarHostState = remember { SnackbarHostState() }
 
-            state = remember {
-                BoardState(
-                    scope = scope,
-                    project = MockData.MOCK_PROJECTS.first(),
-                    snackBarHostState = snackBarHostState,
+            val project = MockData.MOCK_PROJECTS.first()
+            state = BoardState(
+                scope = scope,
+                project = project,
+                snackBarHostState = snackBarHostState,
+            )
+            action =
+                TaskManager(
+                    project.tasks,
                 )
-            }
 
             Scaffold(
                 snackbarHost = {
@@ -112,11 +116,12 @@ class KanbanProjectUiTest {
         }
 
         // when : 상태 변경 함수를 호출했을 때
-        state.changeStatus(
+        action.changeStatus(
             task = MockData.MOCK_PROJECTS.first().tasks.first(),
             status = TaskStatus.DONE,
             idx = 0,
         )
+        state.showKanbanSnackBar(SnackBarText.EDIT_TASK)
 
         // then : "태스크가 이동되었습니다" 스낵바가 출력되어야 한다.
         awaitIdle()

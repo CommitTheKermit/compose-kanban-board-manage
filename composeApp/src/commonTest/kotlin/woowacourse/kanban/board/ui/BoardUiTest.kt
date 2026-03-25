@@ -5,10 +5,8 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
-import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.test.ExperimentalTestApi
 import androidx.compose.ui.test.onNodeWithText
@@ -17,9 +15,8 @@ import androidx.compose.ui.test.performTextInput
 import androidx.compose.ui.test.runComposeUiTest
 import androidx.compose.ui.unit.dp
 import kotlin.test.Test
-import woowacourse.kanban.board.model.BoardState
 import woowacourse.kanban.board.model.KanbanProject
-import woowacourse.kanban.board.ui.constant.MockData
+import woowacourse.kanban.board.model.TaskManager
 
 @OptIn(ExperimentalTestApi::class)
 class BoardUiTest {
@@ -62,19 +59,11 @@ class BoardUiTest {
     @Test
     fun `태스크 카드가 생성되고 스낵바가 출력되어야 한다`() = runComposeUiTest {
         // given : 태스크 카드 정상 입력값이 주어진다
-        lateinit var state: BoardState
+        lateinit var action: TaskManager
 
         setContent {
             val scope = rememberCoroutineScope()
             val snackBarHostState = remember { SnackbarHostState() }
-
-            remember {
-                BoardState(
-                    scope = scope,
-                    project = MockData.MOCK_PROJECTS.first(),
-                    snackBarHostState = snackBarHostState,
-                )
-            }
 
             Scaffold(
                 snackbarHost = {
