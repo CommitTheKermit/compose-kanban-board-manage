@@ -23,6 +23,7 @@ import kotlin.test.Test
 import woowacourse.kanban.board.model.TaskManager
 import woowacourse.kanban.board.ui.constant.MockData
 import woowacourse.kanban.board.ui.constant.SnackBarText
+import woowacourse.kanban.board.ui.stateholder.BoardState
 import woowacourse.kanban.model.TaskStatus
 
 @OptIn(ExperimentalTestApi::class)

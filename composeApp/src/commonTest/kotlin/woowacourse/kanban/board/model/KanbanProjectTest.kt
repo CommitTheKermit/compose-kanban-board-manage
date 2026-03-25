@@ -4,7 +4,7 @@ import androidx.compose.material3.SnackbarHostState
 import kotlin.test.assertEquals
 import kotlinx.coroutines.test.runTest
 import org.junit.Test
-import woowacourse.kanban.board.ui.BoardState
+import woowacourse.kanban.board.ui.stateholder.BoardState
 import woowacourse.kanban.model.BoardData
 import woowacourse.kanban.model.KanbanTask
 import woowacourse.kanban.model.Nickname
