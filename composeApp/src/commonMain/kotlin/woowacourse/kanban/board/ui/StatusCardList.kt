@@ -97,7 +97,7 @@ fun StatusCardList(
             .then(
 
                 if (isDropTarget)
-                    modifier.border(2.dp, Color.Red, RoundedCornerShape(12.dp))
+                    modifier.border(2.dp, Colors.DropTargetBorder, RoundedCornerShape(12.dp))
                 else modifier,
             ),
 
@@ -114,7 +114,7 @@ fun StatusCardList(
             ) {
                 Text(
                     status.displayName,
-                    color = Color.White,
+                    color = Colors.OnNeutral,
                     fontWeight = FontWeight.W600,
                     fontSize = 16.sp,
                 )
@@ -123,11 +123,11 @@ fun StatusCardList(
                     modifier = Modifier
                         .size(width = 29.dp, height = 24.dp)
                         .clip(RoundedCornerShape(12.dp))
-                        .background(Color.White),
+                        .background(Colors.Surface),
                 ) {
                     Text(
                         tasks.size.toString(),
-                        color = Color.Black,
+                        color = Colors.OnSurface,
                     )
                 }
             }
