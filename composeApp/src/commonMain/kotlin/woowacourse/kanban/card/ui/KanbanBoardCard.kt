@@ -2,6 +2,7 @@ package woowacourse.kanban.card.ui
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
+import androidx.compose.foundation.gestures.detectDragGestures
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.padding
@@ -9,9 +10,17 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.input.pointer.pointerInput
+import androidx.compose.ui.layout.onGloballyPositioned
+import androidx.compose.ui.layout.positionInWindow
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.tooling.preview.PreviewParameter
@@ -30,9 +39,17 @@ import woowacourse.kanban.model.Tags
 import woowacourse.kanban.model.Title
 
 @Composable
-fun KanbanCard(board: BoardData) {
+fun KanbanCard(
+    board: BoardData,
+    modifier: Modifier = Modifier,
+    onDragStart: () -> Unit = {},
+    onDragChange: (Offset) -> Unit = {},
+    onDragEnd: () -> Unit = {},
+    onDragCancel: () -> Unit = {},
+) {
+    var cardWindowPosition by remember { mutableStateOf(Offset.Zero) }
     Box(
-        modifier = Modifier
+        modifier = modifier
             .width(270.dp)
             .clip(shape = RoundedCornerShape(15.dp))
             .background(Color.White)
@@ -41,7 +58,28 @@ fun KanbanCard(board: BoardData) {
                 color = Colors.PrimaryBorder,
                 shape = RoundedCornerShape(15.dp),
             )
-            .padding(12.dp),
+            .padding(12.dp)
+            // 1) 카드가 화면 어디에 있는지 추적 (스크롤 대응을 위해 상태로 관리)
+            .onGloballyPositioned { cardWindowPosition = it.positionInWindow() }
+            // 2) 드래그 제스처 감지
+            .pointerInput(Unit) {
+                detectDragGestures(
+                    onDragStart = {
+                        onDragStart()
+                    },
+                    onDrag = { change, _ ->
+                        change.consume()
+                        onDragChange(cardWindowPosition + change.position)
+                    },
+                    onDragEnd = {
+                        onDragEnd()
+                    },
+                    onDragCancel = {
+                        onDragCancel()
+                    },
+                )
+            },
+
     ) {
         Column {
             // 제목
@@ -105,5 +143,7 @@ private fun BoardScreenView(
     @PreviewParameter(BoardPreviewParameterProvider::class)
     board: BoardData,
 ) {
-    KanbanCard(board)
+    KanbanCard(
+        board,
+    )
 }

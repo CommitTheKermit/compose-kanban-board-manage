@@ -9,9 +9,10 @@ import kotlinx.coroutines.launch
 import woowacourse.kanban.model.KanbanTask
 import woowacourse.kanban.model.TaskStatus
 
-class BoardState(val scope: CoroutineScope, initTasks: List<KanbanTask> = emptyList(), val project: KanbanProject) {
+class BoardState(val scope: CoroutineScope, val project: KanbanProject) {
 
-    private val totalTasks: MutableList<KanbanTask>
+    private val totalTasks: MutableList<KanbanTask> = project.tasks
+
     val totalTaskCount by derivedStateOf { totalTasks.size }
 
     val todoCardList: List<KanbanTask> by derivedStateOf { totalTasks.filter { task -> task.status == TaskStatus.TO_DO } }
@@ -26,11 +27,6 @@ class BoardState(val scope: CoroutineScope, initTasks: List<KanbanTask> = emptyL
 
     val showDialog = mutableStateOf(false)
     val snackbarHostState = SnackbarHostState()
-
-    init {
-        initTasks.forEach { task -> distributeTask(task) }
-        totalTasks = project.tasks
-    }
 
     fun distributeTask(task: KanbanTask) {
         totalTasks.add(task)
@@ -51,6 +47,15 @@ class BoardState(val scope: CoroutineScope, initTasks: List<KanbanTask> = emptyL
     ): KanbanTask {
         val newTask = KanbanTask(task.data, status)
 
+        scope.launch {
+            snackbarHostState.currentSnackbarData?.dismiss()
+            snackbarHostState.showSnackbar("태스크가 이동되었습니다.")
+        }
+
         return newTask
+    }
+
+    fun totalTasksGetter(): MutableList<KanbanTask> {
+        return totalTasks
     }
 }

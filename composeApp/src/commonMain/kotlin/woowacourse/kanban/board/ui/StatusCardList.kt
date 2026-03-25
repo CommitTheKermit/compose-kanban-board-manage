@@ -14,10 +14,18 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.derivedStateOf
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.geometry.Offset
+import androidx.compose.ui.geometry.Rect
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.layout.boundsInWindow
+import androidx.compose.ui.layout.onGloballyPositioned
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -60,7 +68,17 @@ fun StatusCardList(
     tasks: List<KanbanTask>,
     status: TaskStatus,
     modifier: Modifier = Modifier,
+    getIsDropTarget: () -> Boolean = { false },
+    onBoundsChanged: (Rect) -> Unit = {},
+    onTaskDragStart: (KanbanTask) -> Unit = {},
+    onTaskDragChange: (Offset) -> Unit = {},
+    onTaskDragEnd: () -> Unit = {},
+    onTaskDragCancel: () -> Unit = {},
 ) {
+
+    val isDropTarget by remember { derivedStateOf { getIsDropTarget() } }
+    val lastBoundsHolder = remember { mutableStateOf<Rect?>(null) }
+
     Column(
         modifier = modifier
             .clip(RoundedCornerShape(10.dp))
@@ -69,7 +87,17 @@ fun StatusCardList(
                 color = status.borderColor,
                 width = 1.dp,
                 shape = RoundedCornerShape(10.dp),
+            ).onGloballyPositioned {
+                val newBounds = it.boundsInWindow()
+                if (newBounds != lastBoundsHolder.value) {
+                    lastBoundsHolder.value = newBounds
+                    onBoundsChanged(newBounds)
+                }
+            }
+            .then(
+                if (isDropTarget) modifier.border(2.dp, status.bgColor, RoundedCornerShape(12.dp)) else modifier,
             ),
+
     ) {
         Box(
             modifier = Modifier
@@ -111,7 +139,15 @@ fun StatusCardList(
 
         ) {
             items(tasks.size) {
-                KanbanCard(tasks[it].data)
+                KanbanCard(
+                    tasks[it].data,
+                    onDragStart = {
+                        onTaskDragStart(tasks[it])
+                    },
+                    onDragChange = onTaskDragChange,
+                    onDragEnd = onTaskDragEnd,
+                    onDragCancel = onTaskDragCancel,
+                )
             }
         }
     }
