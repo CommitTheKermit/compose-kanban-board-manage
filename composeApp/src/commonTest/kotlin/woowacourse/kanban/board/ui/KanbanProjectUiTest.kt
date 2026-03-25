@@ -1,5 +1,13 @@
 package woowacourse.kanban.board.ui
 
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.padding
+import androidx.compose.material3.Scaffold
+import androidx.compose.material3.SnackbarHost
+import androidx.compose.material3.SnackbarHostState
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.ui.Modifier
 import androidx.compose.ui.test.ExperimentalTestApi
 import androidx.compose.ui.test.assert
 import androidx.compose.ui.test.assertCountEquals
@@ -10,7 +18,10 @@ import androidx.compose.ui.test.onNodeWithText
 import androidx.compose.ui.test.performClick
 import androidx.compose.ui.test.runComposeUiTest
 import kotlin.test.Test
+import woowacourse.kanban.board.model.BoardState
 import woowacourse.kanban.board.ui.constant.MockData
+import woowacourse.kanban.board.ui.constant.SnackBarText
+import woowacourse.kanban.model.TaskStatus
 
 @OptIn(ExperimentalTestApi::class)
 class KanbanProjectUiTest {
@@ -68,5 +79,41 @@ class KanbanProjectUiTest {
         onNodeWithText("Compose1").assertExists()
         onNodeWithText("Compose2").assertExists()
         onNodeWithText("compose3 너무너무 길어진 프로젝트 이름").assertExists()
+    }
+
+    @Test
+    fun `상태를 변경 했을 때 스낵바가 출력되어야 한다`() = runComposeUiTest {
+        // given : snackBarHostState를 설정한 Scaffold와 BoardState가 주어진다.
+        lateinit var state: BoardState
+
+        setContent {
+            val scope = rememberCoroutineScope()
+            val snackBarHostState = remember { SnackbarHostState() }
+
+            state = remember {
+                BoardState(
+                    scope = scope,
+                    project = MockData.MOCK_PROJECTS.first(),
+                    snackBarHostState = snackBarHostState,
+                )
+            }
+
+            Scaffold(
+                snackbarHost = { SnackbarHost(snackBarHostState) },
+            ) { innerPadding ->
+                Box(modifier = Modifier.padding(innerPadding))
+            }
+        }
+
+        // when : 상태 변경 함수를 호출했을 때
+        state.changeStatus(
+            task = MockData.MOCK_PROJECTS.first().tasks.first(),
+            status = TaskStatus.DONE,
+            idx = 0,
+        )
+
+        // then : "태스크가 이동되었습니다" 스낵바가 출력되어야 한다.
+        awaitIdle()
+        onNodeWithText(SnackBarText.EDIT_TASK).assertExists()
     }
 }
