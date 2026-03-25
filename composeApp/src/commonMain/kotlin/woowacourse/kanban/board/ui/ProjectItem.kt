@@ -67,6 +67,7 @@ fun ProjectItem(
             color = textColor,
             overflow = TextOverflow.Ellipsis,
             textAlign = TextAlign.Start,
+            maxLines = 1,
             modifier = Modifier.fillMaxWidth(),
         )
     }
