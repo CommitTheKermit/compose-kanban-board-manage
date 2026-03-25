@@ -20,12 +20,11 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import woowacourse.kanban.board.model.KanbanProject
 import woowacourse.kanban.board.model.TaskManager
+import woowacourse.kanban.board.ui.constant.MockData
 import woowacourse.kanban.board.ui.constant.SnackBarText
 import woowacourse.kanban.board.ui.stateholder.BoardState
 import woowacourse.kanban.create.ui.TaskCreateDialog
-import woowacourse.kanban.model.Assignee
 import woowacourse.kanban.model.KanbanTask
-import woowacourse.kanban.model.Nickname
 import woowacourse.kanban.model.TaskStatus
 
 private fun TaskStatus.tasks(state: BoardState): List<KanbanTask> {
@@ -116,18 +115,7 @@ fun KanbanBoard(
                 action.addTask(task)
                 state.showKanbanSnackBar(SnackBarText.CREATE_TASK)
             },
-            assignees = listOf(
-                Assignee(
-                    Nickname(
-                        "다이노",
-                    ),
-                ),
-                Assignee(
-                    Nickname(
-                        "페임스",
-                    ),
-                ),
-            ),
+            assignees = MockData.ASSIGNEES,
             modifier = Modifier,
         )
     }
