@@ -94,8 +94,10 @@ fun StatusCardList(
                 }
             }
             .then(
+
                 if (isDropTarget)
-                    modifier.border(2.dp, Color.Red, RoundedCornerShape(12.dp)) else modifier,
+                    modifier.border(2.dp, Color.Red, RoundedCornerShape(12.dp))
+                else modifier,
             ),
 
     ) {
