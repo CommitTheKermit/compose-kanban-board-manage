@@ -14,6 +14,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
+import woowacourse.kanban.create.model.TaskCreateAction
 import woowacourse.kanban.create.ui.createTextInput.CreateTextInput
 import woowacourse.kanban.create.ui.radioSelector.CoachButton
 import woowacourse.kanban.create.ui.radioSelector.RadioSelector
@@ -31,6 +32,7 @@ fun TaskCreateDialog(
     assignees: List<Assignee> = emptyList(),
 ) {
     val state = remember { TaskCreateState() }
+    val action = remember { TaskCreateAction() }
 
     Dialog(
         onDismissRequest = {
@@ -113,7 +115,11 @@ fun TaskCreateDialog(
                     onCreate = {
                         val isError = state.onCreateValidate()
                         if (isError.not()) {
-                            val task = state.taskCreate(
+                            val task = action.createTask(
+                                title = state.titleInputValue,
+                                content = state.contentInputValue,
+                                tags = state.tagInputValue,
+                                statusIndex = state.selectedStatusIndex,
                                 assignee = assignees[state.selectedAssigneeIndex],
                             )
                             onCreateTask(task)
