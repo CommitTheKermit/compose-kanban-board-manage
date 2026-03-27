@@ -1,19 +1,12 @@
 package woowacourse.kanban.board.ui.stateholder
 
-import androidx.compose.material3.SnackbarHostState
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.launch
 import woowacourse.kanban.model.KanbanTask
 import woowacourse.kanban.model.TaskStatus
 
-class BoardState(
-    private val scope: CoroutineScope,
-    initTasks: MutableList<KanbanTask>,
-    private val snackBarHostState: SnackbarHostState = SnackbarHostState(),
-) {
+class BoardState(initTasks: MutableList<KanbanTask>) {
 
     private val totalTasks: MutableList<KanbanTask> = initTasks
 
@@ -33,12 +26,5 @@ class BoardState(
 
     fun totalTasksGetter(): List<KanbanTask> {
         return totalTasks
-    }
-
-    fun showKanbanSnackBar(message: String) {
-        scope.launch {
-            snackBarHostState.currentSnackbarData?.dismiss()
-            snackBarHostState.showSnackbar(message)
-        }
     }
 }

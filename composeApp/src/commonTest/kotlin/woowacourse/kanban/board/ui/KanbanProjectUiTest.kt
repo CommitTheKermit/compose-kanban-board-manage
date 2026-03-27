@@ -20,6 +20,7 @@ import androidx.compose.ui.test.performClick
 import androidx.compose.ui.test.runComposeUiTest
 import androidx.compose.ui.unit.dp
 import kotlin.test.Test
+import kotlinx.coroutines.launch
 import woowacourse.kanban.board.ui.constant.MockData
 import woowacourse.kanban.board.ui.constant.SnackBarText
 import woowacourse.kanban.board.ui.stateholder.BoardState
@@ -99,9 +100,7 @@ class KanbanProjectUiTest {
                 KanbanProjectState(project.getTasks(), project.title)
 
             state = BoardState(
-                scope = scope,
                 initTasks = projectState.tasks,
-                snackBarHostState = snackBarHostState,
             )
             Scaffold(
                 snackbarHost = {
@@ -112,14 +111,14 @@ class KanbanProjectUiTest {
             ) { innerPadding ->
                 Box(modifier = Modifier.padding(innerPadding))
             }
-        }
 
-        // when : 상태 변경 함수를 호출했을 때
-        projectState.changeStatus(
-            status = TaskStatus.DONE,
-            idx = 0,
-        )
-        state.showKanbanSnackBar(SnackBarText.EDIT_TASK)
+            // when : 상태 변경 함수를 호출했을 때
+            projectState.changeStatus(
+                status = TaskStatus.DONE,
+                idx = 0,
+            )
+            scope.launch { snackBarHostState.showSnackbar(SnackBarText.EDIT_TASK) }
+        }
 
         // then : "태스크가 이동되었습니다" 스낵바가 출력되어야 한다.
         awaitIdle()

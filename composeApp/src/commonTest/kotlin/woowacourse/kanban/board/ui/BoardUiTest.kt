@@ -75,7 +75,6 @@ class BoardUiTest {
             ) { innerPadding ->
                 KanbanBoard(
                     project = KanbanProject(mutableListOf()),
-                    snackbarHostState = snackBarHostState,
                     modifier = Modifier.padding(innerPadding),
                 )
             }
