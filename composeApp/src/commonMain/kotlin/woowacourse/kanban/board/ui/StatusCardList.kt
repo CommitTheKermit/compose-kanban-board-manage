@@ -151,6 +151,7 @@ fun StatusCardList(
                     onDragChange = onTaskDragChange,
                     onDragEnd = onTaskDragEnd,
                     onDragCancel = onTaskDragCancel,
+                    isDraggable = true,
                 )
             }
         }
