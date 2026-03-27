@@ -19,7 +19,7 @@ import woowacourse.kanban.board.ui.constant.MockData
 
 @Composable
 fun KanbanPage(modifier: Modifier = Modifier) {
-    val snackbarHostState = SnackbarHostState()
+    val snackbarHostState = remember { SnackbarHostState() }
     var selectedProject by remember { mutableStateOf(MockData.MOCK_PROJECTS.first()) }
     var selectedProjectIndex by remember { mutableIntStateOf(0) }
 
