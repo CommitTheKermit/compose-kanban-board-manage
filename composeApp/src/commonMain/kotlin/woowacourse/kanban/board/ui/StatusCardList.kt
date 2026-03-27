@@ -33,8 +33,8 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import woowacourse.kanban.Colors
 import woowacourse.kanban.card.ui.KanbanCard
-import woowacourse.kanban.model.KanbanTask
-import woowacourse.kanban.model.TaskStatus
+import woowacourse.kanban.commonmodel.KanbanTask
+import woowacourse.kanban.commonmodel.TaskStatus
 
 private val TaskStatus.displayName: String
     get() = when (this) {

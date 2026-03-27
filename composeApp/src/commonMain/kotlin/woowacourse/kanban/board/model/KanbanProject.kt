@@ -1,6 +1,6 @@
 package woowacourse.kanban.board.model
 
-import woowacourse.kanban.model.KanbanTask
+import woowacourse.kanban.commonmodel.KanbanTask
 
 class KanbanProject(inputTasks: List<KanbanTask>, val title: String = "") {
     private val tasks: MutableList<KanbanTask> = inputTasks.toMutableList()

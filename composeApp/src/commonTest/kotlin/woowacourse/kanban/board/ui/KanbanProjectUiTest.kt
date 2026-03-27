@@ -25,7 +25,7 @@ import woowacourse.kanban.board.ui.constant.MockData
 import woowacourse.kanban.board.ui.constant.SnackBarText
 import woowacourse.kanban.board.ui.stateholder.BoardState
 import woowacourse.kanban.board.ui.stateholder.KanbanProjectState
-import woowacourse.kanban.model.TaskStatus
+import woowacourse.kanban.commonmodel.TaskStatus
 
 @OptIn(ExperimentalTestApi::class)
 class KanbanProjectUiTest {

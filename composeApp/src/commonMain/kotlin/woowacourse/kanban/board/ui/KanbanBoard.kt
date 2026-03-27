@@ -20,9 +20,9 @@ import woowacourse.kanban.board.model.KanbanProject
 import woowacourse.kanban.board.ui.constant.MockData
 import woowacourse.kanban.board.ui.stateholder.BoardState
 import woowacourse.kanban.board.ui.stateholder.KanbanProjectState
+import woowacourse.kanban.commonmodel.KanbanTask
+import woowacourse.kanban.commonmodel.TaskStatus
 import woowacourse.kanban.create.ui.TaskCreateDialog
-import woowacourse.kanban.model.KanbanTask
-import woowacourse.kanban.model.TaskStatus
 
 private fun TaskStatus.tasks(state: BoardState): List<KanbanTask> {
     return when (this) {
