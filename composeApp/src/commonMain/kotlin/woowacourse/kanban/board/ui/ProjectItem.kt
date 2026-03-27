@@ -30,17 +30,19 @@ fun ProjectItem(
     modifier: Modifier = Modifier,
     onClick: () -> Unit = {},
 ) {
-
     val bgColor = if (isSelected) Colors.SecondarySelectedBg else Color.Transparent
     val textColor = if (isSelected) Colors.ProjectSelectedText else Colors.PrimaryText
+    val selectedBorder = if (isSelected) BorderStroke(1.dp, Colors.PrimaryBorder) else null
+    val shadowModifier = if (isSelected) modifier.dropShadow(
+        shape = RoundedCornerShape(10.dp),
+        shadow = Shadow(10.dp, spread = 0.dp, color = Colors.ProjectShadow, offset = DpOffset(0.dp, 12.dp)),
+    ) else modifier
+
     OutlinedButton(
         onClick = { onClick() },
         shape = RoundedCornerShape(10.dp),
         contentPadding = PaddingValues(vertical = 12.dp, horizontal = 15.dp),
-        border = if (isSelected) BorderStroke(
-            width = 1.dp,
-            color = Colors.PrimaryBorder,
-        ) else null,
+        border = selectedBorder,
         colors = ButtonColors(
             containerColor = bgColor,
             contentColor = ButtonDefaults.outlinedButtonColors().contentColor,
@@ -51,14 +53,7 @@ fun ProjectItem(
             .fillMaxWidth()
             .clip(RoundedCornerShape(10.dp))
             .then(
-                if (isSelected)
-                    modifier.dropShadow(
-                        shape = RoundedCornerShape(10.dp),
-                        shadow = Shadow(
-                            10.dp, spread = 0.dp, color = Colors.ProjectShadow,
-                            offset = DpOffset(0.dp, 12.dp),
-                        ),
-                    ) else modifier,
+                shadowModifier,
             ),
 
     ) {
