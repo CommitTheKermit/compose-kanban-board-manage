@@ -1,12 +1,14 @@
 package woowacourse.kanban.board.model
 
-import androidx.compose.runtime.mutableStateListOf
 import woowacourse.kanban.model.KanbanTask
 
-class KanbanProject(inputTasks: MutableList<KanbanTask>, val title: String = "") {
-    val tasks = mutableStateListOf<KanbanTask>()
+class KanbanProject(inputTasks: List<KanbanTask>, val title: String = "") {
+    private val tasks: MutableList<KanbanTask> = inputTasks.toMutableList()
+    fun addTask(task: KanbanTask) {
+        tasks.add(task)
+    }
 
-    init {
-        tasks.addAll(inputTasks)
+    fun getTasks(): List<KanbanTask> {
+        return tasks.toList()
     }
 }
