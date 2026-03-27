@@ -46,6 +46,7 @@ fun KanbanCard(
     onDragChange: (Offset) -> Unit = {},
     onDragEnd: () -> Unit = {},
     onDragCancel: () -> Unit = {},
+    isDraggable: Boolean = false,
 ) {
     var cardWindowPosition by remember { mutableStateOf(Offset.Zero) }
 
@@ -60,26 +61,30 @@ fun KanbanCard(
                 shape = RoundedCornerShape(15.dp),
             )
             .padding(12.dp)
-            // 1) 카드가 화면 어디에 있는지 추적 (스크롤 대응을 위해 상태로 관리)
-            .onGloballyPositioned { cardWindowPosition = it.positionInWindow() }
-            // 2) 드래그 제스처 감지
-            .pointerInput(Unit) {
-                detectDragGestures(
-                    onDragStart = {
-                        onDragStart()
-                    },
-                    onDrag = { change, _ ->
-                        change.consume()
-                        onDragChange(cardWindowPosition + change.position)
-                    },
-                    onDragEnd = {
-                        onDragEnd()
-                    },
-                    onDragCancel = {
-                        onDragCancel()
-                    },
-                )
-            },
+            .then(
+                if (isDraggable)
+                    // 1) 카드가 화면 어디에 있는지 추적 (스크롤 대응을 위해 상태로 관리)
+                    modifier.onGloballyPositioned { cardWindowPosition = it.positionInWindow() }
+                        // 2) 드래그 제스처 감지
+                        .pointerInput(Unit) {
+                            detectDragGestures(
+                                onDragStart = {
+                                    onDragStart()
+                                },
+                                onDrag = { change, _ ->
+                                    change.consume()
+                                    onDragChange(cardWindowPosition + change.position)
+                                },
+                                onDragEnd = {
+                                    onDragEnd()
+                                },
+                                onDragCancel = {
+                                    onDragCancel()
+                                },
+                            )
+                        }
+                else modifier,
+            ),
 
     ) {
         Column {
