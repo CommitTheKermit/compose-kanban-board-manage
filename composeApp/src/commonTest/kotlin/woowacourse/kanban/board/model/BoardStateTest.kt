@@ -5,12 +5,12 @@ import kotlin.test.assertEquals
 import kotlinx.coroutines.test.runTest
 import woowacourse.kanban.board.ui.stateholder.BoardState
 import woowacourse.kanban.board.ui.stateholder.KanbanProjectState
-import woowacourse.kanban.model.BoardData
-import woowacourse.kanban.model.KanbanTask
-import woowacourse.kanban.model.Nickname
-import woowacourse.kanban.model.Tags
-import woowacourse.kanban.model.TaskStatus
-import woowacourse.kanban.model.Title
+import woowacourse.kanban.commonmodel.BoardData
+import woowacourse.kanban.commonmodel.KanbanTask
+import woowacourse.kanban.commonmodel.Nickname
+import woowacourse.kanban.commonmodel.Tags
+import woowacourse.kanban.commonmodel.TaskStatus
+import woowacourse.kanban.commonmodel.Title
 
 class BoardStateTest {
     @Test

@@ -4,7 +4,7 @@ import androidx.compose.ui.test.ExperimentalTestApi
 import kotlin.test.assertEquals
 import org.junit.Assert
 import org.junit.Test
-import woowacourse.kanban.model.Title
+import woowacourse.kanban.commonmodel.Title
 
 @OptIn(ExperimentalTestApi::class)
 class TitleTest {

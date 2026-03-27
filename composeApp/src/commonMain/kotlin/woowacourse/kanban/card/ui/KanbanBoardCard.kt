@@ -33,10 +33,10 @@ import woowacourse.kanban.card.constant.DEFAULT_TITLE
 import woowacourse.kanban.card.constant.MAX_CONTENT
 import woowacourse.kanban.card.constant.MAX_NAME
 import woowacourse.kanban.card.constant.MAX_TITLE
-import woowacourse.kanban.model.BoardData
-import woowacourse.kanban.model.Nickname
-import woowacourse.kanban.model.Tags
-import woowacourse.kanban.model.Title
+import woowacourse.kanban.commonmodel.BoardData
+import woowacourse.kanban.commonmodel.Nickname
+import woowacourse.kanban.commonmodel.Tags
+import woowacourse.kanban.commonmodel.Title
 
 @Composable
 fun KanbanCard(
