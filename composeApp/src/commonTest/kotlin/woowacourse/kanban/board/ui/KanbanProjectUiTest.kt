@@ -34,7 +34,9 @@ class KanbanProjectUiTest {
     fun `프로젝트를 선택하면 프로젝트에 저장되어 있는 태스크들이 표시되어야 한다`() = runComposeUiTest {
         // given : 칸반 페이지가 주어지고 프로젝트 리스트는 칸반 페이지 내부에 MockData로 설정 되어 있다
         setContent {
-            KanbanPage()
+            KanbanPage(
+                projects = MockData.MOCK_PROJECTS,
+            )
         }
 
         // when : 프로젝트 버튼을 눌렀을 때
@@ -51,7 +53,9 @@ class KanbanProjectUiTest {
     fun `프로젝트를 선택하면 보드의 제목이 변경되어야 한다`() = runComposeUiTest {
         // given : 칸반 페이지가 주어지고 프로젝트 리스트는 칸반 페이지 내부에 MockData로 설정 되어 있다
         setContent {
-            KanbanPage()
+            KanbanPage(
+                projects = MockData.MOCK_PROJECTS,
+            )
         }
 
         // when : 가장 처음 프로젝트의 제목이 표시되고 다른 프로젝트 버튼을 눌렀을 때

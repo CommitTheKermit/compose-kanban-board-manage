@@ -17,13 +17,17 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import kotlinx.coroutines.launch
+import woowacourse.kanban.board.model.KanbanProject
 import woowacourse.kanban.board.ui.constant.MockData
 import woowacourse.kanban.board.ui.constant.SnackBarText
 
 @Composable
-fun KanbanPage(modifier: Modifier = Modifier) {
+fun KanbanPage(
+    projects: List<KanbanProject>,
+    modifier: Modifier = Modifier,
+) {
     val snackbarHostState = remember { SnackbarHostState() }
-    var selectedProject by remember { mutableStateOf(MockData.MOCK_PROJECTS.first()) }
+    var selectedProject by remember { mutableStateOf(projects.first()) }
     var selectedProjectIndex by remember { mutableIntStateOf(0) }
 
     val scope = rememberCoroutineScope()
@@ -42,7 +46,7 @@ fun KanbanPage(modifier: Modifier = Modifier) {
                 selectedProjectIndex = selectedProjectIndex,
                 onClick = { index ->
                     selectedProjectIndex = index
-                    selectedProject = MockData.MOCK_PROJECTS[selectedProjectIndex]
+                    selectedProject = projects[selectedProjectIndex]
                 },
             )
             KanbanBoard(
@@ -67,5 +71,7 @@ fun KanbanPage(modifier: Modifier = Modifier) {
 @Preview(widthDp = 1600, heightDp = 900)
 @Composable
 fun KanbanPagePreview() {
-    KanbanPage()
+    KanbanPage(
+        projects = emptyList(),
+    )
 }
