@@ -7,7 +7,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import woowacourse.kanban.create.model.TaskCreateAction
 
-class TaskCreateState(private val action: TaskCreateAction = TaskCreateAction()) {
+class TaskFormState(private val action: TaskCreateAction = TaskCreateAction()) {
     var titleInputValue by mutableStateOf("")
         private set
     var contentInputValue by mutableStateOf("")
