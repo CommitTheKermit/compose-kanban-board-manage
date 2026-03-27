@@ -19,10 +19,10 @@ import androidx.compose.ui.geometry.Rect
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import woowacourse.kanban.board.model.KanbanProject
-import woowacourse.kanban.board.model.TaskManager
 import woowacourse.kanban.board.ui.constant.MockData
 import woowacourse.kanban.board.ui.constant.SnackBarText
 import woowacourse.kanban.board.ui.stateholder.BoardState
+import woowacourse.kanban.board.ui.stateholder.KanbanProjectState
 import woowacourse.kanban.create.ui.TaskCreateDialog
 import woowacourse.kanban.model.KanbanTask
 import woowacourse.kanban.model.TaskStatus
@@ -44,8 +44,12 @@ fun KanbanBoard(
 ) {
     val scope = rememberCoroutineScope()
 
-    val state = remember(project) { BoardState(scope, project, snackbarHostState) }
-    val action = remember(state) { TaskManager(project.tasks) }
+    val projectState = remember(project.getTasks()) {
+        KanbanProjectState(project.getTasks(), project.title)
+    }
+    val state = remember(projectState) {
+        BoardState(scope, projectState.tasks, snackbarHostState)
+    }
 
     var draggedTask by remember { mutableStateOf<KanbanTask?>(null) }
     var currentDragPosition by remember { mutableStateOf<Offset?>(null) }
@@ -87,8 +91,7 @@ fun KanbanBoard(
                             if (targetStatus != null && task.status != targetStatus) {
                                 val idx = state.totalTasksGetter().indexOfFirst { it.data.id == task.data.id }
                                 if (idx != -1) {
-                                    action.changeStatus(
-                                        task = state.totalTasksGetter()[idx],
+                                    projectState.changeStatus(
                                         status = targetStatus,
                                         idx = idx,
                                     )
@@ -112,7 +115,7 @@ fun KanbanBoard(
         TaskCreateDialog(
             onDismiss = { state.showDialog.value = false },
             onCreateTask = { task ->
-                action.addTask(task)
+                project.addTask(task)
                 state.showKanbanSnackBar(SnackBarText.CREATE_TASK)
             },
             assignees = MockData.ASSIGNEES,
@@ -124,5 +127,5 @@ fun KanbanBoard(
 @Preview(widthDp = 1500, heightDp = 800)
 @Composable
 fun KanbanBoardPreview() {
-    KanbanBoard(KanbanProject(mutableListOf()))
+    KanbanBoard(KanbanProject(mutableListOf(), "hello"))
 }

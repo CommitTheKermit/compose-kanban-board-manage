@@ -16,7 +16,6 @@ import androidx.compose.ui.test.runComposeUiTest
 import androidx.compose.ui.unit.dp
 import kotlin.test.Test
 import woowacourse.kanban.board.model.KanbanProject
-import woowacourse.kanban.board.model.TaskManager
 
 @OptIn(ExperimentalTestApi::class)
 class BoardUiTest {
@@ -59,9 +58,11 @@ class BoardUiTest {
     @Test
     fun `태스크 카드가 생성되고 스낵바가 출력되어야 한다`() = runComposeUiTest {
         // given : 태스크 카드 정상 입력값이 주어진다
-        lateinit var action: TaskManager
 
         setContent {
+            //  snackBarHostState를 외부에서 생성한 후 KanbanBoard로 주입하는 형식이기 때문에 해당 형식으로 바꿔야만 했음
+            // KanbanBoard 안에서 스낵바를 출력하려면 Scaffold가 있는 부모인 KanbanPage의 snackBarHostState를 알아야 하는데
+            // 그렇기 때문에 snackBarHostState를 파라미터로 받아야 했음
             val scope = rememberCoroutineScope()
             val snackBarHostState = remember { SnackbarHostState() }
 
