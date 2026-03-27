@@ -19,7 +19,7 @@ import woowacourse.kanban.create.ui.createTextInput.CreateTextInput
 import woowacourse.kanban.create.ui.radioSelector.CoachButton
 import woowacourse.kanban.create.ui.radioSelector.RadioSelector
 import woowacourse.kanban.create.ui.radioSelector.StatusButton
-import woowacourse.kanban.create.ui.stateholder.TaskCreateState
+import woowacourse.kanban.create.ui.stateholder.TaskFormState
 import woowacourse.kanban.model.Assignee
 import woowacourse.kanban.model.KanbanTask
 import woowacourse.kanban.model.TaskStatus
@@ -31,7 +31,7 @@ fun TaskCreateDialog(
     modifier: Modifier,
     assignees: List<Assignee> = emptyList(),
 ) {
-    val state = remember { TaskCreateState() }
+    val state = remember { TaskFormState() }
     val action = remember { TaskCreateAction() }
 
     Dialog(
