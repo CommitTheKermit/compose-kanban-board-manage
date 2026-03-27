@@ -11,17 +11,22 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import kotlinx.coroutines.launch
 import woowacourse.kanban.board.ui.constant.MockData
+import woowacourse.kanban.board.ui.constant.SnackBarText
 
 @Composable
 fun KanbanPage(modifier: Modifier = Modifier) {
     val snackbarHostState = remember { SnackbarHostState() }
     var selectedProject by remember { mutableStateOf(MockData.MOCK_PROJECTS.first()) }
     var selectedProjectIndex by remember { mutableIntStateOf(0) }
+
+    val scope = rememberCoroutineScope()
 
     Scaffold(
         snackbarHost = {
@@ -42,7 +47,18 @@ fun KanbanPage(modifier: Modifier = Modifier) {
             )
             KanbanBoard(
                 project = selectedProject,
-                snackbarHostState = snackbarHostState,
+                onTaskCreated = {
+                    scope.launch {
+                        snackbarHostState.currentSnackbarData?.dismiss()
+                        snackbarHostState.showSnackbar(SnackBarText.CREATE_TASK)
+                    }
+                },
+                onStatusChanged = {
+                    scope.launch {
+                        snackbarHostState.currentSnackbarData?.dismiss()
+                        snackbarHostState.showSnackbar(SnackBarText.EDIT_TASK)
+                    }
+                },
             )
         }
     }
