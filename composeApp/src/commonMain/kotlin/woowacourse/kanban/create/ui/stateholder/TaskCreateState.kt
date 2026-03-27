@@ -6,8 +6,6 @@ import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import woowacourse.kanban.create.model.TaskCreateAction
-import woowacourse.kanban.model.Assignee
-import woowacourse.kanban.model.KanbanTask
 
 class TaskCreateState(private val action: TaskCreateAction = TaskCreateAction()) {
     var titleInputValue by mutableStateOf("")
@@ -59,15 +57,5 @@ class TaskCreateState(private val action: TaskCreateAction = TaskCreateAction())
         if (isTagError) tagInputValue = ""
 
         return isTitleError || isTagError
-    }
-
-    fun taskCreate(assignee: Assignee): KanbanTask {
-        return action.createTask(
-            title = titleInputValue,
-            content = contentInputValue,
-            tags = tagInputValue,
-            statusIndex = selectedStatusIndex,
-            assignee = assignee,
-        )
     }
 }
