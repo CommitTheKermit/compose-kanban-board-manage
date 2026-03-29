@@ -24,7 +24,10 @@ class BoardState(initTasks: List<KanbanTask>) {
 
     val showDialog = mutableStateOf(false)
 
-    fun totalTasksGetter(): List<KanbanTask> {
-        return totalTasks
+    // List로 반환하더라도 toMutableList()를 통해 캐스팅하면 원본 리스트에 대해서
+    // 조작이 가능하다. 반환할 때 toList()를 사용해 새로운 리스트를 만들어 주면
+    // 원본 리스트와는 다른 리스트로 반환되게 됨으로 조작이 차단된다.
+    fun getTotalTasks(): List<KanbanTask> {
+        return totalTasks.toList()
     }
 }
