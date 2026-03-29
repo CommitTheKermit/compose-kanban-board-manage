@@ -4,7 +4,6 @@ import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlinx.coroutines.test.runTest
 import woowacourse.kanban.board.ui.stateholder.BoardState
-import woowacourse.kanban.board.ui.stateholder.KanbanProjectState
 import woowacourse.kanban.commonmodel.BoardData
 import woowacourse.kanban.commonmodel.KanbanTask
 import woowacourse.kanban.commonmodel.Nickname
@@ -55,11 +54,8 @@ class BoardStateTest {
             ),
         )
 
-        val projectState = KanbanProjectState(
-            tasks,
-        )
         val state = BoardState(
-            initTasks = projectState.tasks,
+            initTasks = tasks,
         )
 
         // when : 완료율을 계산하면
@@ -107,11 +103,8 @@ class BoardStateTest {
 
         // when : 컬럼들을 분류하면 TO_DO, IN_PROGRESS, DONE 상태 별로 리스트에 배치되어야 한다.
 
-        val projectState = KanbanProjectState(
-            initTasks = tasks,
-        )
         val state = BoardState(
-            initTasks = projectState.tasks,
+            initTasks = tasks,
         )
 
         // then : TO_DO, IN_PROGRESS, DONE 카드 리스트 각각 하나씩 존재해야 한다

@@ -24,7 +24,6 @@ import kotlinx.coroutines.launch
 import woowacourse.kanban.board.ui.constant.MockData
 import woowacourse.kanban.board.ui.constant.SnackBarText
 import woowacourse.kanban.board.ui.stateholder.BoardState
-import woowacourse.kanban.board.ui.stateholder.KanbanProjectState
 import woowacourse.kanban.commonmodel.TaskStatus
 
 @OptIn(ExperimentalTestApi::class)
@@ -95,19 +94,15 @@ class KanbanProjectUiTest {
     fun `상태를 변경 했을 때 스낵바가 출력되어야 한다`() = runComposeUiTest {
         // given : snackBarHostState를 설정한 Scaffold와 BoardAction가 주어진다.
         lateinit var state: BoardState
-        lateinit var projectState: KanbanProjectState
 
         setContent {
             val scope = rememberCoroutineScope()
             val snackBarHostState = remember { SnackbarHostState() }
 
             val project = MockData.MOCK_PROJECTS.first()
-            projectState =
-                KanbanProjectState(project.getTasks(), project.title)
+            state =
+                BoardState(project.getTasks())
 
-            state = BoardState(
-                initTasks = projectState.tasks,
-            )
             Scaffold(
                 snackbarHost = {
                     SnackbarHost(snackBarHostState, modifier = Modifier.offset(y = (-50).dp)) { data ->
@@ -119,7 +114,7 @@ class KanbanProjectUiTest {
             }
 
             // when : 상태 변경 함수를 호출했을 때
-            projectState.changeStatus(
+            state.changeStatus(
                 status = TaskStatus.DONE,
                 idx = 0,
             )

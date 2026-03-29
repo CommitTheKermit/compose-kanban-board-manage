@@ -16,9 +16,9 @@ import androidx.compose.ui.test.runComposeUiTest
 import androidx.compose.ui.unit.dp
 import kotlin.test.Test
 import kotlinx.coroutines.launch
-import woowacourse.kanban.board.model.KanbanProject
 import woowacourse.kanban.board.ui.constant.MockData
 import woowacourse.kanban.board.ui.constant.SnackBarText
+import woowacourse.kanban.board.ui.stateholder.BoardState
 
 @OptIn(ExperimentalTestApi::class)
 class BoardUiTest {
@@ -27,9 +27,12 @@ class BoardUiTest {
     fun `새 태스크 생성 버튼을 누르면 생성 다이얼로그가 열려야 한다`() = runComposeUiTest {
         // given : 새 태스크 버튼이 주어진다
         setContent {
+            val boardState = BoardState(mutableListOf())
+
             KanbanBoard(
-                project = KanbanProject(mutableListOf()),
                 assignees = MockData.ASSIGNEES,
+                boardState = boardState,
+                projectTitle = "",
             )
         }
 
@@ -44,9 +47,15 @@ class BoardUiTest {
     fun `생성 다이얼로그에서 정상적인 값들을 입력 후 생성 버튼을 누르면 칸반 보드 리스트에 표시되어야 한다`() = runComposeUiTest {
         // given : 태스크 카드 정상 입력값이 주어진다
         setContent {
+            val boardState = BoardState(mutableListOf())
+
             KanbanBoard(
-                project = KanbanProject(mutableListOf()),
                 assignees = MockData.ASSIGNEES,
+                boardState = boardState,
+                projectTitle = "",
+                onTaskCreated = { task ->
+                    boardState.addTask(task)
+                },
             )
         }
 
@@ -80,9 +89,13 @@ class BoardUiTest {
                     }
                 },
             ) { innerPadding ->
+
+                val boardState = BoardState(mutableListOf())
+
                 KanbanBoard(
-                    project = KanbanProject(mutableListOf()),
                     assignees = MockData.ASSIGNEES,
+                    boardState = boardState,
+                    projectTitle = "",
                     modifier = Modifier.padding(innerPadding),
                     onTaskCreated = {
                         scope.launch {
