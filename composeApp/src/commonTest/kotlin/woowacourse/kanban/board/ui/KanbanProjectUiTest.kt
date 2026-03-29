@@ -36,6 +36,7 @@ class KanbanProjectUiTest {
         setContent {
             KanbanPage(
                 projects = MockData.MOCK_PROJECTS,
+                assignees = MockData.ASSIGNEES,
             )
         }
 
@@ -55,6 +56,7 @@ class KanbanProjectUiTest {
         setContent {
             KanbanPage(
                 projects = MockData.MOCK_PROJECTS,
+                assignees = MockData.ASSIGNEES,
             )
         }
 

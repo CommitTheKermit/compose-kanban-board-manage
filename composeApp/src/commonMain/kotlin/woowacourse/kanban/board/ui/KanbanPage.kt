@@ -18,12 +18,13 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import kotlinx.coroutines.launch
 import woowacourse.kanban.board.model.KanbanProject
-import woowacourse.kanban.board.ui.constant.MockData
 import woowacourse.kanban.board.ui.constant.SnackBarText
+import woowacourse.kanban.commonmodel.Assignee
 
 @Composable
 fun KanbanPage(
     projects: List<KanbanProject>,
+    assignees: List<Assignee>,
     modifier: Modifier = Modifier,
 ) {
     val snackbarHostState = remember { SnackbarHostState() }
@@ -42,7 +43,7 @@ fun KanbanPage(
     ) { innerPadding ->
         Row(modifier = Modifier.padding(innerPadding)) {
             KanbanSidebar(
-                MockData.MOCK_PROJECTS,
+                projects,
                 selectedProjectIndex = selectedProjectIndex,
                 onClick = { index ->
                     selectedProjectIndex = index
@@ -63,6 +64,7 @@ fun KanbanPage(
                         snackbarHostState.showSnackbar(SnackBarText.EDIT_TASK)
                     }
                 },
+                assignees = assignees,
             )
         }
     }
@@ -73,5 +75,6 @@ fun KanbanPage(
 fun KanbanPagePreview() {
     KanbanPage(
         projects = emptyList(),
+        assignees = emptyList(),
     )
 }
