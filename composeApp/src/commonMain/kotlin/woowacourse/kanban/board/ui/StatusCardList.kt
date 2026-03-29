@@ -32,6 +32,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import woowacourse.kanban.Colors
+import woowacourse.kanban.card.ui.DragWrapper
 import woowacourse.kanban.card.ui.KanbanCard
 import woowacourse.kanban.commonmodel.KanbanTask
 import woowacourse.kanban.commonmodel.TaskStatus
@@ -143,16 +144,18 @@ fun StatusCardList(
 
         ) {
             items(count = tasks.size, key = { tasks[it].data.id }) {
-                KanbanCard(
-                    tasks[it].data,
+                DragWrapper(
                     onDragStart = {
                         onTaskDragStart(tasks[it])
                     },
                     onDragChange = onTaskDragChange,
                     onDragEnd = onTaskDragEnd,
                     onDragCancel = onTaskDragCancel,
-                    isDraggable = true,
-                )
+                ) {
+                    KanbanCard(
+                        tasks[it].data,
+                    )
+                }
             }
         }
     }
