@@ -3,7 +3,7 @@ package woowacourse.kanban.board.model
 import kotlin.test.assertEquals
 import kotlinx.coroutines.test.runTest
 import org.junit.Test
-import woowacourse.kanban.board.ui.stateholder.KanbanProjectState
+import woowacourse.kanban.board.ui.stateholder.BoardState
 import woowacourse.kanban.commonmodel.BoardData
 import woowacourse.kanban.commonmodel.KanbanTask
 import woowacourse.kanban.commonmodel.Nickname
@@ -14,9 +14,9 @@ import woowacourse.kanban.commonmodel.Title
 class KanbanProjectTest {
     @Test
     fun `새 태스크를 생성했을 때 현재 프로젝트에 삽입되어야 한다`() = runTest {
-        val project = KanbanProject(mutableListOf())
+        val boardState = BoardState(mutableListOf())
 
-        project.addTask(
+        boardState.addTask(
             KanbanTask(
                 data = BoardData(
                     title = Title("제목"),
@@ -28,7 +28,7 @@ class KanbanProjectTest {
             ),
         )
 
-        assertEquals(1, project.getTasks().size)
+        assertEquals(1, boardState.totalTaskCount)
     }
 
     @Test
@@ -43,10 +43,10 @@ class KanbanProjectTest {
             status = TaskStatus.IN_PROGRESS,
         )
 
-        val state = KanbanProjectState(mutableListOf(task))
+        val state = BoardState(mutableListOf(task))
 
         state.changeStatus(TaskStatus.DONE, idx = 0)
 
-        assertEquals(TaskStatus.DONE, state.tasks.first().status)
+        assertEquals(TaskStatus.DONE, state.getTotalTasks().first().status)
     }
 }
