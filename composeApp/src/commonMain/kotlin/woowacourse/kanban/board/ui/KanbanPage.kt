@@ -18,6 +18,7 @@ import androidx.compose.ui.unit.dp
 import kotlinx.coroutines.launch
 import woowacourse.kanban.board.model.KanbanProject
 import woowacourse.kanban.board.ui.constant.SnackBarText
+import woowacourse.kanban.board.ui.stateholder.BoardState
 import woowacourse.kanban.commonmodel.Assignee
 
 @Composable
@@ -28,6 +29,10 @@ fun KanbanPage(
 ) {
     val snackbarHostState = remember { SnackbarHostState() }
     var selectedProjectIndex by remember { mutableIntStateOf(0) }
+
+    val boardStates = remember(projects) {
+        projects.map { BoardState(it.getTasks()) }
+    }
 
     val scope = rememberCoroutineScope()
 
@@ -48,14 +53,17 @@ fun KanbanPage(
                 },
             )
             KanbanBoard(
-                project = projects[selectedProjectIndex],
-                onTaskCreated = {
+                boardState = boardStates[selectedProjectIndex],
+                projectTitle = projects[selectedProjectIndex].title,
+                onTaskCreated = { task ->
+                    boardStates[selectedProjectIndex].addTask(task)
                     scope.launch {
                         snackbarHostState.currentSnackbarData?.dismiss()
                         snackbarHostState.showSnackbar(SnackBarText.CREATE_TASK)
                     }
                 },
-                onStatusChanged = {
+                onStatusChanged = { status, idx ->
+                    boardStates[selectedProjectIndex].changeStatus(status = status, idx = idx)
                     scope.launch {
                         snackbarHostState.currentSnackbarData?.dismiss()
                         snackbarHostState.showSnackbar(SnackBarText.EDIT_TASK)

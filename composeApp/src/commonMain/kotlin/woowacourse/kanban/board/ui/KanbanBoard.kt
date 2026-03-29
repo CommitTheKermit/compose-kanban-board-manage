@@ -16,10 +16,8 @@ import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.geometry.Rect
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import woowacourse.kanban.board.model.KanbanProject
 import woowacourse.kanban.board.ui.constant.MockData
 import woowacourse.kanban.board.ui.stateholder.BoardState
-import woowacourse.kanban.board.ui.stateholder.KanbanProjectState
 import woowacourse.kanban.commonmodel.Assignee
 import woowacourse.kanban.commonmodel.KanbanTask
 import woowacourse.kanban.commonmodel.TaskStatus
@@ -36,19 +34,14 @@ private fun TaskStatus.tasks(state: BoardState): List<KanbanTask> {
 @OptIn(ExperimentalMaterial3ExpressiveApi::class)
 @Composable
 fun KanbanBoard(
-    project: KanbanProject,
+    boardState: BoardState,
+    projectTitle: String,
     assignees: List<Assignee>,
     modifier: Modifier = Modifier,
-    onTaskCreated: () -> Unit = {},
-    onStatusChanged: () -> Unit = {},
+    onTaskCreated: (KanbanTask) -> Unit = {},
+    onStatusChanged: (TaskStatus, Int) -> Unit = { _, _ -> },
     selectedStatuses: List<TaskStatus> = TaskStatus.entries,
 ) {
-    val projectState = remember(project.getTasks()) {
-        KanbanProjectState(project.getTasks(), project.title)
-    }
-    val state = remember(projectState) {
-        BoardState(projectState.tasks)
-    }
 
     var draggedTask by remember { mutableStateOf<KanbanTask?>(null) }
     var currentDragPosition by remember { mutableStateOf<Offset?>(null) }
@@ -56,11 +49,11 @@ fun KanbanBoard(
 
     Column(modifier = modifier) {
         KanbanBoardHeader(
-            progress = state.progress,
-            doneTaskCount = state.doneCardList.size,
-            totalTaskCount = state.totalTaskCount,
-            onClick = { state.showDialog.value = true },
-            headerTitle = project.title,
+            progress = boardState.progress,
+            doneTaskCount = boardState.doneCardList.size,
+            totalTaskCount = boardState.totalTaskCount,
+            onClick = { boardState.showDialog.value = true },
+            headerTitle = projectTitle,
         )
         Row(
             horizontalArrangement = Arrangement.spacedBy(16.dp),
@@ -68,7 +61,7 @@ fun KanbanBoard(
         ) {
             selectedStatuses.forEach { status ->
                 StatusCardList(
-                    tasks = status.tasks(state),
+                    tasks = status.tasks(boardState),
                     status = status,
                     modifier = Modifier.weight(1f),
                     getIsDropTarget = {
@@ -88,13 +81,9 @@ fun KanbanBoard(
 
                         draggedTask?.let { task ->
                             if (targetStatus != null && task.status != targetStatus) {
-                                val idx = state.getTotalTasks().indexOfFirst { it.data.id == task.data.id }
+                                val idx = boardState.getTotalTasks().indexOfFirst { it.data.id == task.data.id }
                                 if (idx != -1) {
-                                    projectState.changeStatus(
-                                        status = targetStatus,
-                                        idx = idx,
-                                    )
-                                    onStatusChanged()
+                                    onStatusChanged(targetStatus, idx)
                                 }
                             }
                         }
@@ -110,12 +99,11 @@ fun KanbanBoard(
         }
     }
 
-    if (state.showDialog.value) {
+    if (boardState.showDialog.value) {
         TaskCreateDialog(
-            onDismiss = { state.showDialog.value = false },
+            onDismiss = { boardState.showDialog.value = false },
             onCreateTask = { task ->
-                project.addTask(task)
-                onTaskCreated()
+                onTaskCreated(task)
             },
             assignees = assignees,
             modifier = Modifier,
@@ -127,7 +115,8 @@ fun KanbanBoard(
 @Composable
 fun KanbanBoardPreview() {
     KanbanBoard(
-        KanbanProject(mutableListOf(), "hello"),
+        BoardState(initTasks = emptyList()),
         assignees = MockData.ASSIGNEES,
+        projectTitle = "",
     )
 }
