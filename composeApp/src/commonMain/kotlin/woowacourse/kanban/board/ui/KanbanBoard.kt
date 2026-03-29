@@ -87,7 +87,7 @@ fun KanbanBoard(
 
                         draggedTask?.let { task ->
                             if (targetStatus != null && task.status != targetStatus) {
-                                val idx = state.totalTasksGetter().indexOfFirst { it.data.id == task.data.id }
+                                val idx = state.getTotalTasks().indexOfFirst { it.data.id == task.data.id }
                                 if (idx != -1) {
                                     projectState.changeStatus(
                                         status = targetStatus,
