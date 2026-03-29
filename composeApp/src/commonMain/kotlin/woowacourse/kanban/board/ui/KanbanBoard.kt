@@ -23,14 +23,6 @@ import woowacourse.kanban.commonmodel.KanbanTask
 import woowacourse.kanban.commonmodel.TaskStatus
 import woowacourse.kanban.create.ui.TaskCreateDialog
 
-private fun TaskStatus.tasks(state: BoardState): List<KanbanTask> {
-    return when (this) {
-        TaskStatus.TO_DO -> state.todoCardList
-        TaskStatus.IN_PROGRESS -> state.inProgressCardList
-        TaskStatus.DONE -> state.doneCardList
-    }
-}
-
 @OptIn(ExperimentalMaterial3ExpressiveApi::class)
 @Composable
 fun KanbanBoard(
@@ -61,7 +53,7 @@ fun KanbanBoard(
         ) {
             selectedStatuses.forEach { status ->
                 StatusCardList(
-                    tasks = status.tasks(boardState),
+                    tasks = boardState.getTasksByStatus(status),
                     status = status,
                     modifier = Modifier.weight(1f),
                     getIsDropTarget = {
