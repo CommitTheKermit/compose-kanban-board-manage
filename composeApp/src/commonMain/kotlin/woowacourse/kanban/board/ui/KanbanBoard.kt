@@ -37,10 +37,11 @@ private fun TaskStatus.tasks(state: BoardState): List<KanbanTask> {
 @Composable
 fun KanbanBoard(
     project: KanbanProject,
+    assignees: List<Assignee>,
     modifier: Modifier = Modifier,
     onTaskCreated: () -> Unit = {},
     onStatusChanged: () -> Unit = {},
-    assignees: List<Assignee>,
+    selectedStatuses: List<TaskStatus> = TaskStatus.entries,
 ) {
     val projectState = remember(project.getTasks()) {
         KanbanProjectState(project.getTasks(), project.title)
@@ -65,7 +66,7 @@ fun KanbanBoard(
             horizontalArrangement = Arrangement.spacedBy(16.dp),
             modifier = Modifier.fillMaxWidth(1f),
         ) {
-            TaskStatus.entries.forEach { status ->
+            selectedStatuses.forEach { status ->
                 StatusCardList(
                     tasks = status.tasks(state),
                     status = status,
