@@ -13,10 +13,12 @@ import woowacourse.kanban.board.ui.constant.MockData
 fun App() {
     KanbanPage(
         projects = MockData.MOCK_PROJECTS,
+        assignees = MockData.ASSIGNEES,
         modifier = Modifier.size(
             height = 800.dp,
             width = 1300.dp,
         )
             .background(Colors.Surface),
+
     )
 }

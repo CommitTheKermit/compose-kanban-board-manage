@@ -20,6 +20,7 @@ import woowacourse.kanban.board.model.KanbanProject
 import woowacourse.kanban.board.ui.constant.MockData
 import woowacourse.kanban.board.ui.stateholder.BoardState
 import woowacourse.kanban.board.ui.stateholder.KanbanProjectState
+import woowacourse.kanban.commonmodel.Assignee
 import woowacourse.kanban.commonmodel.KanbanTask
 import woowacourse.kanban.commonmodel.TaskStatus
 import woowacourse.kanban.create.ui.TaskCreateDialog
@@ -39,6 +40,7 @@ fun KanbanBoard(
     modifier: Modifier = Modifier,
     onTaskCreated: () -> Unit = {},
     onStatusChanged: () -> Unit = {},
+    assignees: List<Assignee>,
 ) {
     val projectState = remember(project.getTasks()) {
         KanbanProjectState(project.getTasks(), project.title)
@@ -114,7 +116,7 @@ fun KanbanBoard(
                 project.addTask(task)
                 onTaskCreated()
             },
-            assignees = MockData.ASSIGNEES,
+            assignees = assignees,
             modifier = Modifier,
         )
     }
@@ -125,5 +127,6 @@ fun KanbanBoard(
 fun KanbanBoardPreview() {
     KanbanBoard(
         KanbanProject(mutableListOf(), "hello"),
+        assignees = MockData.ASSIGNEES,
     )
 }

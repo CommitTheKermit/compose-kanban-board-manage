@@ -15,7 +15,10 @@ import androidx.compose.ui.test.performTextInput
 import androidx.compose.ui.test.runComposeUiTest
 import androidx.compose.ui.unit.dp
 import kotlin.test.Test
+import kotlinx.coroutines.launch
 import woowacourse.kanban.board.model.KanbanProject
+import woowacourse.kanban.board.ui.constant.MockData
+import woowacourse.kanban.board.ui.constant.SnackBarText
 
 @OptIn(ExperimentalTestApi::class)
 class BoardUiTest {
@@ -26,6 +29,7 @@ class BoardUiTest {
         setContent {
             KanbanBoard(
                 project = KanbanProject(mutableListOf()),
+                assignees = MockData.ASSIGNEES,
             )
         }
 
@@ -40,7 +44,10 @@ class BoardUiTest {
     fun `생성 다이얼로그에서 정상적인 값들을 입력 후 생성 버튼을 누르면 칸반 보드 리스트에 표시되어야 한다`() = runComposeUiTest {
         // given : 태스크 카드 정상 입력값이 주어진다
         setContent {
-            KanbanBoard(project = KanbanProject(mutableListOf()))
+            KanbanBoard(
+                project = KanbanProject(mutableListOf()),
+                assignees = MockData.ASSIGNEES,
+            )
         }
 
         // when : 생성 다이얼로그에서 정상적인 값을 입력 후 생성 버튼을 누를 때
@@ -75,7 +82,14 @@ class BoardUiTest {
             ) { innerPadding ->
                 KanbanBoard(
                     project = KanbanProject(mutableListOf()),
+                    assignees = MockData.ASSIGNEES,
                     modifier = Modifier.padding(innerPadding),
+                    onTaskCreated = {
+                        scope.launch {
+                            snackBarHostState.currentSnackbarData?.dismiss()
+                            snackBarHostState.showSnackbar(SnackBarText.CREATE_TASK)
+                        }
+                    },
                 )
             }
         }
