@@ -9,7 +9,6 @@ import androidx.compose.material3.SnackbarHostState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
-import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
@@ -28,7 +27,6 @@ fun KanbanPage(
     modifier: Modifier = Modifier,
 ) {
     val snackbarHostState = remember { SnackbarHostState() }
-    var selectedProject by remember { mutableStateOf(projects.first()) }
     var selectedProjectIndex by remember { mutableIntStateOf(0) }
 
     val scope = rememberCoroutineScope()
@@ -47,11 +45,10 @@ fun KanbanPage(
                 selectedProjectIndex = selectedProjectIndex,
                 onClick = { index ->
                     selectedProjectIndex = index
-                    selectedProject = projects[selectedProjectIndex]
                 },
             )
             KanbanBoard(
-                project = selectedProject,
+                project = projects[selectedProjectIndex],
                 onTaskCreated = {
                     scope.launch {
                         snackbarHostState.currentSnackbarData?.dismiss()
