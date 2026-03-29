@@ -42,4 +42,12 @@ class BoardState(initTasks: List<KanbanTask>) {
     ) {
         totalTasks[idx] = totalTasks[idx].copy(status = status)
     }
+
+    fun getTasksByStatus(status: TaskStatus): List<KanbanTask> {
+        return when (status) {
+            TaskStatus.TO_DO -> todoCardList
+            TaskStatus.IN_PROGRESS -> inProgressCardList
+            TaskStatus.DONE -> doneCardList
+        }
+    }
 }
