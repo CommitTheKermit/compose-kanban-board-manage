@@ -6,9 +6,9 @@ import androidx.compose.runtime.mutableStateOf
 import woowacourse.kanban.commonmodel.KanbanTask
 import woowacourse.kanban.commonmodel.TaskStatus
 
-class BoardState(initTasks: MutableList<KanbanTask>) {
+class BoardState(initTasks: List<KanbanTask>) {
 
-    private val totalTasks: MutableList<KanbanTask> = initTasks
+    private val totalTasks: MutableList<KanbanTask> = initTasks.toMutableList()
 
     val totalTaskCount by derivedStateOf { totalTasks.size }
 
