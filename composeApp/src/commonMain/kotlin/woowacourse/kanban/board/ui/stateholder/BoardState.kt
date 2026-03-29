@@ -2,13 +2,14 @@ package woowacourse.kanban.board.ui.stateholder
 
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
 import woowacourse.kanban.commonmodel.KanbanTask
 import woowacourse.kanban.commonmodel.TaskStatus
 
 class BoardState(initTasks: List<KanbanTask>) {
 
-    private val totalTasks: MutableList<KanbanTask> = initTasks.toMutableList()
+    private val totalTasks = mutableStateListOf<KanbanTask>().apply { addAll(initTasks) }
 
     val totalTaskCount by derivedStateOf { totalTasks.size }
 
@@ -29,5 +30,16 @@ class BoardState(initTasks: List<KanbanTask>) {
     // 원본 리스트와는 다른 리스트로 반환되게 됨으로 조작이 차단된다.
     fun getTotalTasks(): List<KanbanTask> {
         return totalTasks.toList()
+    }
+
+    fun addTask(task: KanbanTask) {
+        totalTasks.add(task)
+    }
+
+    fun changeStatus(
+        status: TaskStatus,
+        idx: Int,
+    ) {
+        totalTasks[idx] = totalTasks[idx].copy(status = status)
     }
 }
