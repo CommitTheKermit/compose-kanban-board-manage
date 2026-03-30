@@ -1,40 +1,34 @@
-This is a Kotlin Multiplatform project targeting Android, Desktop (JVM).
+>기능 요구 사항<br>
+디자인 시안을 참고하여 칸반 보드 프로젝트를 구현한다.
+드래그 앤 드롭을 통해 카드 상태를 변경할 수 있게 한다. 
 
-* [/composeApp](./composeApp/src) is for code that will be shared across your Compose Multiplatform applications.
-  It contains several subfolders:
-  - [commonMain](./composeApp/src/commonMain/kotlin) is for code that’s common for all targets.
-  - Other folders are for Kotlin code that will be compiled for only the platform indicated in the folder name.
-    For example, if you want to use Apple’s CoreCrypto for the iOS part of your Kotlin app,
-    the [iosMain](./composeApp/src/iosMain/kotlin) folder would be the right place for such calls.
-    Similarly, if you want to edit the Desktop (JVM) specific part, the [jvmMain](./composeApp/src/jvmMain/kotlin)
-    folder is the appropriate location.
+>프로그래밍 요구 사항<br>
+여러 번 그려지지 않아도 되는 뷰는 매번 리컴포지션 되지 않아야 한다.
+적절한 테스트 방법을 활용하여 기능 요구 사항을 테스트한다.
+모든 요구 사항이 테스트 가능하진 않다. 스스로 판단해서 구분한다.
+프로젝트 생성을 위한 뷰는 없다. 가짜 데이터와 테스트 더블을 활용한다
 
-### Build and Run Android Application
+## 테스트 목록
 
-To build and run the development version of the Android app, use the run configuration from the run widget
-in your IDE’s toolbar or build it directly from the terminal:
-- on macOS/Linux
-  ```shell
-  ./gradlew :composeApp:assembleDebug
-  ```
-- on Windows
-  ```shell
-  .\gradlew.bat :composeApp:assembleDebug
-  ```
+#### 단위 테스트
+- [x] 새 태스크를 생성했을 때 현재 프로젝트에 삽입되어야 한다
+- [x] 태스크의 상태를 변경 할 수 있어야 한다
+ 
+#### UI 테스트
+- [x] 프로젝트를 선택하면 프로젝트에 저장되어 있는 태스크들이 표시되어야 한다
+- [x] 프로젝트를 선택하면 보드의 제목이 변경되어야 한다
+- [x] 사이드바에 프로젝트 리스트가 출력되어야 한다
+- [x] 상태를 변경 했을 때 스낵바가 출력되어야 한다
 
-### Build and Run Desktop (JVM) Application
+## 기능 목록
+ - [x] 태스크 카드 드래그 앤 드롭
+ - [x] 태스크 카드의 상태가 변경되었을 때 스낵바를 출력해야 한다
+ - [x] 태스크를 프로젝트 별로 관리할 수 있어야 한다
 
-To build and run the development version of the desktop app, use the run configuration from the run widget
-in your IDE’s toolbar or run it directly from the terminal:
-- on macOS/Linux
-  ```shell
-  ./gradlew :composeApp:run
-  ```
-- on Windows
-  ```shell
-  .\gradlew.bat :composeApp:run
-  ```
-
----
-
-Learn more about [Kotlin Multiplatform](https://www.jetbrains.com/help/kotlin-multiplatform-dev/get-started.html)…
+## UI 목록
+- [x] 프로젝트 사이드바
+  - 드로워 헤더
+  - 드로워 설명
+  - 프로젝트 컬럼
+- [x] 태스크 상태 변경 스낵바 텍스트
+  - "태스크가 이동되었습니다."
