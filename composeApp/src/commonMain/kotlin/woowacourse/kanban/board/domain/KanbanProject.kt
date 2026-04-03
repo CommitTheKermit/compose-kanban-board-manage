@@ -3,18 +3,21 @@ package woowacourse.kanban.board.domain
 import woowacourse.kanban.domain.KanbanTask
 import woowacourse.kanban.domain.TaskStatus
 
-class KanbanProject(private val inputTasks: List<KanbanTask>, val title: String = "") {
-    private val tasks: MutableList<KanbanTask> = inputTasks.toMutableList()
+class KanbanProject(inputTasks: List<KanbanTask>, val title: String = "") {
+    private val tasks: List<KanbanTask> = inputTasks.toList()
 
     fun copy(
-        newInputTasks: List<KanbanTask> = inputTasks,
+        newInputTasks: List<KanbanTask> = tasks,
         newTitle: String = title,
     ): KanbanProject {
         return KanbanProject(newInputTasks, newTitle)
     }
 
     fun addTask(task: KanbanTask): KanbanProject {
-        return copy(newInputTasks = tasks + task, newTitle = title)
+        return copy(
+            newInputTasks = tasks + task,
+            newTitle = title,
+        )
     }
 
     fun changeStatus(
@@ -23,7 +26,9 @@ class KanbanProject(private val inputTasks: List<KanbanTask>, val title: String 
     ): KanbanProject {
         return copy(
             newInputTasks = tasks.map {
-                if (it.data.id == taskId) it.copy(inputStatus = status) else it
+                if (it.data.id == taskId)
+                    it.copy(inputStatus = status)
+                else it
             },
         )
     }
@@ -40,16 +45,16 @@ class KanbanProject(private val inputTasks: List<KanbanTask>, val title: String 
     }
 
     fun deleteTask(taskId: Long): KanbanProject {
-        val targetIndex = tasks.indexOfFirst { it.data.id == taskId }
-        tasks.removeAt(targetIndex)
-
-        return copy(newInputTasks = tasks.toList())
+        return copy(newInputTasks = tasks.filter { it.data.id != taskId })
     }
 
     fun updateTask(task: KanbanTask): KanbanProject {
-        val targetIndex = tasks.indexOfFirst { it.data.id == task.data.id }
-        tasks[targetIndex] = task
-
-        return copy(newInputTasks = tasks.toList())
+        return copy(
+            newInputTasks = tasks.map {
+                if (it.data.id == task.data.id)
+                    task
+                else it
+            },
+        )
     }
 }
