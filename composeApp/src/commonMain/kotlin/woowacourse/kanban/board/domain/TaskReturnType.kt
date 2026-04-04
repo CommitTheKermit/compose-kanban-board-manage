@@ -1,11 +1,28 @@
 package woowacourse.kanban.board.domain
 
-enum class TaskReturnType {
-    CREATE_SUCCESS,
-    TASK_STATUS_SUCCESS,
-    UPDATE_SUCCESS,
-    NOT_UPDATABLE,
+sealed class CreateResult {
+    data class Success(val project: KanbanProject) : CreateResult()
+    data object NotCreatable : CreateResult()
+}
+
+sealed class StatusChangeResult {
+    data class Success(val project: KanbanProject) : StatusChangeResult()
+    data object NotAssigned : StatusChangeResult()
+    data object NotChangeable : StatusChangeResult()
+}
+
+sealed class DeleteResult {
+    data class Success(val project: KanbanProject) : DeleteResult()
+    data object NotDeletable : DeleteResult()
+}
+
+enum class DeleteReturnType {
     DELETE_SUCCESS,
     NOT_DELETABLE,
+}
+
+enum class ChangeStatusReturnType {
+    CHANGE_SUCCESS,
+    NOT_CHANGEABLE,
     NOT_ASSIGNED,
 }
