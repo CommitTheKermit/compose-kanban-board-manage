@@ -16,8 +16,9 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import kotlinx.coroutines.launch
+import woowacourse.kanban.board.domain.ChangeStatusReturnType
+import woowacourse.kanban.board.domain.DeleteReturnType
 import woowacourse.kanban.board.domain.KanbanProject
-import woowacourse.kanban.board.domain.TaskReturnType
 import woowacourse.kanban.board.ui.constant.SnackBarText
 import woowacourse.kanban.board.ui.stateholder.BoardState
 import woowacourse.kanban.domain.Assignee
@@ -36,20 +37,11 @@ fun KanbanPage(
     }
 
     val scope = rememberCoroutineScope()
-    val showSnackBar: (TaskReturnType) -> Unit = { type ->
-        val display =
-            when (type) {
-                TaskReturnType.CREATE_SUCCESS -> SnackBarText.CREATE_TASK
-                TaskReturnType.TASK_STATUS_SUCCESS -> SnackBarText.STATUS_EDIT
-                TaskReturnType.UPDATE_SUCCESS -> SnackBarText.UPDATE_TASK
-                TaskReturnType.DELETE_SUCCESS -> SnackBarText.DELETE_TASK
-                TaskReturnType.NOT_UPDATABLE -> SnackBarText.ILLEGAL_STATUS_EDIT
-                TaskReturnType.NOT_DELETABLE -> SnackBarText.ILLEGAL_DELETE
-                TaskReturnType.NOT_ASSIGNED -> SnackBarText.ILLEGAL_STATUS_EDIT_ASSIGNEE
-            }
+    val showSnackBar: (String) -> Unit = { message ->
+
         scope.launch {
             snackbarHostState.currentSnackbarData?.dismiss()
-            snackbarHostState.showSnackbar(display)
+            snackbarHostState.showSnackbar(message)
         }
     }
 
@@ -74,19 +66,30 @@ fun KanbanPage(
                 projectTitle = projects[selectedProjectIndex].title,
                 onTaskCreated = { task ->
                     boardStates[selectedProjectIndex].addTask(task)
-                    showSnackBar(TaskReturnType.CREATE_SUCCESS)
+                    showSnackBar(SnackBarText.CREATE_TASK)
                 },
                 onTaskUpdated = { task ->
                     boardStates[selectedProjectIndex].updateTask(task)
-                    showSnackBar(TaskReturnType.UPDATE_SUCCESS)
+                    showSnackBar(SnackBarText.UPDATE_TASK)
                 },
                 onTaskDeleted = { id ->
-                    val taskReturnType = boardStates[selectedProjectIndex].deleteTask(taskId = id)
-                    showSnackBar(taskReturnType)
+                    val deleteReturnType = boardStates[selectedProjectIndex].deleteTask(taskId = id)
+                    showSnackBar(
+                        when (deleteReturnType) {
+                            DeleteReturnType.DELETE_SUCCESS -> SnackBarText.DELETE_TASK
+                            DeleteReturnType.NOT_DELETABLE -> SnackBarText.ILLEGAL_DELETE
+                        },
+                    )
                 },
                 onStatusChanged = { status, id ->
-                    val taskReturnType = boardStates[selectedProjectIndex].changeStatus(status = status, taskId = id)
-                    showSnackBar(taskReturnType)
+                    val changeStatusReturnType = boardStates[selectedProjectIndex].changeStatus(status = status, taskId = id)
+                    showSnackBar(
+                        when (changeStatusReturnType) {
+                            ChangeStatusReturnType.CHANGE_SUCCESS -> SnackBarText.STATUS_EDIT
+                            ChangeStatusReturnType.NOT_CHANGEABLE -> SnackBarText.ILLEGAL_STATUS_EDIT
+                            ChangeStatusReturnType.NOT_ASSIGNED -> SnackBarText.ILLEGAL_STATUS_EDIT
+                        },
+                    )
                 },
                 assignees = assignees,
             )
