@@ -6,6 +6,12 @@ sealed class StatusChangeResult {
     data object NotChangeable : StatusChangeResult()
 }
 
+sealed class TaskChangeResult {
+    data class Success(val task: KanbanTask) : TaskChangeResult()
+    data object NotAssigned : TaskChangeResult()
+    data object NotChangeable : TaskChangeResult()
+}
+
 sealed class DeleteResult {
     data class Success(val project: KanbanProject) : DeleteResult()
     data object NotDeletable : DeleteResult()

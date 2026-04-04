@@ -3,9 +3,9 @@ package woowacourse.kanban.board.ui.constant
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.AccountCircle
 import woowacourse.kanban.board.domain.KanbanProject
+import woowacourse.kanban.board.domain.KanbanTask
 import woowacourse.kanban.domain.Assignee
 import woowacourse.kanban.domain.BoardData
-import woowacourse.kanban.domain.KanbanTask
 import woowacourse.kanban.domain.Nickname
 import woowacourse.kanban.domain.Tags
 import woowacourse.kanban.domain.TaskStatus

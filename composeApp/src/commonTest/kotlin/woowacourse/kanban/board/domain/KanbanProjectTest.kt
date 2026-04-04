@@ -3,10 +3,10 @@ package woowacourse.kanban.board.domain
 import kotlin.test.assertEquals
 import kotlinx.coroutines.test.runTest
 import org.junit.Test
+import woowacourse.kanban.board.domain.KanbanTask
 import woowacourse.kanban.board.ui.stateholder.BoardState
 import woowacourse.kanban.domain.Assignee
 import woowacourse.kanban.domain.BoardData
-import woowacourse.kanban.domain.KanbanTask
 import woowacourse.kanban.domain.Nickname
 import woowacourse.kanban.domain.Tags
 import woowacourse.kanban.domain.TaskStatus
@@ -15,9 +15,9 @@ import woowacourse.kanban.domain.Title
 class KanbanProjectTest {
     @Test
     fun `새 태스크를 생성했을 때 현재 프로젝트에 삽입되어야 한다`() = runTest {
-        val boardState = BoardState(KanbanProject(mutableListOf()))
+        val project = KanbanProject(mutableListOf())
 
-        boardState.addTask(
+        val newProject = project.addTask(
             KanbanTask(
                 data = BoardData(
                     title = Title("제목"),
@@ -29,7 +29,8 @@ class KanbanProjectTest {
             ),
         )
 
-        assertEquals(1, boardState.totalTaskCount)
+        assertEquals(0, project.getTasks().size)
+        assertEquals(1, newProject.getTasks().size)
     }
 
     @Test
@@ -79,15 +80,14 @@ class KanbanProjectTest {
             ),
         )
         val project = KanbanProject(tasks)
-        val state = BoardState(project)
 
         // when : 각  태스크를 지울 때
-        val resultDone = state.deleteTask(0)
-        val resultReview = state.deleteTask(1)
+        val resultDone = project.deleteTask(0)
+        val resultReview = project.deleteTask(1)
 
         // then : 삭제가 실패해야 한다
-        assertEquals(TaskReturnType.NOT_DELETABLE, resultDone)
-        assertEquals(TaskReturnType.NOT_DELETABLE, resultReview)
+        assertEquals(DeleteResult.NotDeletable, resultDone)
+        assertEquals(DeleteResult.NotDeletable, resultReview)
     }
 
     @Test
@@ -106,15 +106,14 @@ class KanbanProjectTest {
             ),
         )
         val project = KanbanProject(tasks)
-        val state = BoardState(project)
 
         // when : 상태를 Review와 Done으로 바꿀 때
-        val resultReview = state.changeStatus(0, TaskStatus.REVIEW)
-        val resultDone = state.changeStatus(0, TaskStatus.DONE)
+        val resultReview = project.changeStatus(0, TaskStatus.REVIEW)
+        val resultDone = project.changeStatus(0, TaskStatus.DONE)
 
         // then : 상태 변경이 실패해야 한다
-        assertEquals(TaskReturnType.NOT_UPDATABLE, resultReview)
-        assertEquals(TaskReturnType.NOT_UPDATABLE, resultDone)
+        assertEquals(StatusChangeResult.NotChangeable, resultReview)
+        assertEquals(StatusChangeResult.NotChangeable, resultDone)
     }
 
     @Test
@@ -133,13 +132,12 @@ class KanbanProjectTest {
             ),
         )
         val project = KanbanProject(tasks)
-        val state = BoardState(project)
 
         // when : 상태를 Done으로 바꿀 때
-        val resultDone = state.changeStatus(0, TaskStatus.DONE)
+        val resultDone = project.changeStatus(0, TaskStatus.DONE)
 
         // then : 상태 변경이 실패해야 한다
-        assertEquals(TaskReturnType.NOT_UPDATABLE, resultDone)
+        assertEquals(StatusChangeResult.NotChangeable, resultDone)
     }
 
     @Test
@@ -158,13 +156,12 @@ class KanbanProjectTest {
             ),
         )
         val project = KanbanProject(tasks)
-        val state = BoardState(project)
 
         // when : 상태를 To Do로 바꿀 때
-        val resultToDo = state.changeStatus(0, TaskStatus.TO_DO)
+        val resultToDo = project.changeStatus(0, TaskStatus.TO_DO)
 
         // then : 상태 변경이 실패해야 한다
-        assertEquals(TaskReturnType.NOT_UPDATABLE, resultToDo)
+        assertEquals(StatusChangeResult.NotChangeable, resultToDo)
     }
 
     @Test
@@ -183,14 +180,13 @@ class KanbanProjectTest {
             ),
         )
         val project = KanbanProject(tasks)
-        val state = BoardState(project)
 
         // when : 상태를 In Progress와 Review로 바꿀 때
-        val resultInProgress = state.changeStatus(0, TaskStatus.IN_PROGRESS)
-        val resultReview = state.changeStatus(0, TaskStatus.REVIEW)
+        val resultInProgress = project.changeStatus(0, TaskStatus.IN_PROGRESS)
+        val resultReview = project.changeStatus(0, TaskStatus.REVIEW)
 
         // then : 상태 변경이 실패해야 한다
-        assertEquals(TaskReturnType.NOT_UPDATABLE, resultInProgress)
-        assertEquals(TaskReturnType.NOT_UPDATABLE, resultReview)
+        assertEquals(StatusChangeResult.NotChangeable, resultInProgress)
+        assertEquals(StatusChangeResult.NotChangeable, resultReview)
     }
 }

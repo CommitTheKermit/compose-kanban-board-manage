@@ -1,6 +1,5 @@
 package woowacourse.kanban.board.domain
 
-import woowacourse.kanban.domain.KanbanTask
 import woowacourse.kanban.domain.TaskStatus
 
 class KanbanProject(inputTasks: List<KanbanTask>, val title: String = "") {
@@ -20,47 +19,27 @@ class KanbanProject(inputTasks: List<KanbanTask>, val title: String = "") {
         )
     }
 
-    fun isAssigned(taskId: Long): ChangeStatusReturnType? {
-        val targetIndex = tasks.indexOfFirst { it.data.id == taskId }
-        require(targetIndex != -1) { "$taskId not found" }
-        val targetTask = tasks[targetIndex]
-
-        if (targetTask.data.assignee == null) {
-            return ChangeStatusReturnType.NOT_ASSIGNED
-        } else {
-            return null
-        }
-    }
-
     fun changeStatus(
         taskId: Long,
         status: TaskStatus,
     ): StatusChangeResult {
-        if (status == TaskStatus.TO_DO) {
-            val result = isAssigned(
-                taskId = taskId,
-            )
-            if (result == ChangeStatusReturnType.NOT_ASSIGNED) {
-                return StatusChangeResult.NotAssigned
-            }
-        }
-
         val targetIndex = tasks.indexOfFirst { it.data.id == taskId }
         require(targetIndex != -1) { "$taskId not found" }
         val targetTask = tasks[targetIndex]
 
-        if (targetTask.status.isChangeable(status)) {
-            return StatusChangeResult.Success(
+        return when (val result = targetTask.changeStatus(status)) {
+            TaskChangeResult.NotAssigned -> StatusChangeResult.NotAssigned
+            TaskChangeResult.NotChangeable -> StatusChangeResult.NotChangeable
+            is TaskChangeResult.Success -> StatusChangeResult.Success(
                 copy(
                     newInputTasks = tasks.map {
                         if (it.data.id == taskId)
-                            it.copy(inputStatus = status)
+                            result.task
                         else it
                     },
                 ),
             )
         }
-        return StatusChangeResult.NotChangeable
     }
 
     // List로 반환하더라도 toMutableList()를 통해 캐스팅하면 원본 리스트에 대해서
@@ -78,6 +57,7 @@ class KanbanProject(inputTasks: List<KanbanTask>, val title: String = "") {
         val targetIndex = tasks.indexOfFirst { it.data.id == taskId }
         require(targetIndex != -1) { "$taskId not found" }
         val targetTask = tasks[targetIndex]
+
         return if (targetTask.status.isRemovable) {
             DeleteResult.Success(copy(newInputTasks = tasks.filter { it.data.id != taskId }))
         } else DeleteResult.NotDeletable

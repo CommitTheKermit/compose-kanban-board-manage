@@ -17,11 +17,11 @@ import androidx.compose.ui.geometry.Rect
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import woowacourse.kanban.board.domain.KanbanProject
+import woowacourse.kanban.board.domain.KanbanTask
 import woowacourse.kanban.board.ui.constant.MockData
 import woowacourse.kanban.board.ui.dialog.ui.TaskManageDialog
 import woowacourse.kanban.board.ui.stateholder.BoardState
 import woowacourse.kanban.domain.Assignee
-import woowacourse.kanban.domain.KanbanTask
 import woowacourse.kanban.domain.TaskStatus
 
 @OptIn(ExperimentalMaterial3ExpressiveApi::class)

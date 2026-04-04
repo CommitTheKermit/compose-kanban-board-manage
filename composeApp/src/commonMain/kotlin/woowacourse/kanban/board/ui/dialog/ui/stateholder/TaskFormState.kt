@@ -5,8 +5,8 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
+import woowacourse.kanban.board.domain.KanbanTask
 import woowacourse.kanban.domain.Assignee
-import woowacourse.kanban.domain.KanbanTask
 import woowacourse.kanban.domain.Tags
 import woowacourse.kanban.domain.Title
 

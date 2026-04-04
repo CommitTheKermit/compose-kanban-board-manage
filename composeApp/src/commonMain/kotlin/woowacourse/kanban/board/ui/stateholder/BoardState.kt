@@ -8,8 +8,8 @@ import woowacourse.kanban.board.domain.ChangeStatusReturnType
 import woowacourse.kanban.board.domain.DeleteResult
 import woowacourse.kanban.board.domain.DeleteReturnType
 import woowacourse.kanban.board.domain.KanbanProject
+import woowacourse.kanban.board.domain.KanbanTask
 import woowacourse.kanban.board.domain.StatusChangeResult
-import woowacourse.kanban.domain.KanbanTask
 import woowacourse.kanban.domain.TaskStatus
 
 class BoardState(initProject: KanbanProject) {
