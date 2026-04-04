@@ -3,10 +3,10 @@ package woowacourse.kanban.board.domain
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlinx.coroutines.test.runTest
+import woowacourse.kanban.board.domain.KanbanTask
 import woowacourse.kanban.board.ui.stateholder.BoardState
 import woowacourse.kanban.domain.Assignee
 import woowacourse.kanban.domain.BoardData
-import woowacourse.kanban.domain.KanbanTask
 import woowacourse.kanban.domain.Nickname
 import woowacourse.kanban.domain.Tags
 import woowacourse.kanban.domain.TaskStatus

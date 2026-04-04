@@ -32,9 +32,9 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import woowacourse.kanban.Colors
+import woowacourse.kanban.board.domain.KanbanTask
 import woowacourse.kanban.card.ui.DragWrapper
 import woowacourse.kanban.card.ui.KanbanCard
-import woowacourse.kanban.domain.KanbanTask
 import woowacourse.kanban.domain.TaskStatus
 
 private val TaskStatus.displayName: String

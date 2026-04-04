@@ -1,6 +1,10 @@
-package woowacourse.kanban.domain
+package woowacourse.kanban.board.domain
 
-import kotlin.collections.emptyList
+import woowacourse.kanban.domain.Assignee
+import woowacourse.kanban.domain.BoardData
+import woowacourse.kanban.domain.Tags
+import woowacourse.kanban.domain.TaskStatus
+import woowacourse.kanban.domain.Title
 
 class KanbanTask(val data: BoardData, val status: TaskStatus) {
 
@@ -30,20 +34,13 @@ class KanbanTask(val data: BoardData, val status: TaskStatus) {
         return KanbanTask(inputData, inputStatus)
     }
 
-    fun isChangeable(targetStatus: TaskStatus): Boolean {
-        return when (status) {
-            TaskStatus.TO_DO -> targetStatus == TaskStatus.IN_PROGRESS
-            TaskStatus.IN_PROGRESS -> targetStatus == TaskStatus.TO_DO || targetStatus == TaskStatus.REVIEW
-            TaskStatus.REVIEW -> targetStatus == TaskStatus.IN_PROGRESS || targetStatus == TaskStatus.DONE
-            TaskStatus.DONE -> targetStatus == TaskStatus.TO_DO
+    fun changeStatus(targetStatus: TaskStatus): TaskChangeResult {
+        if (status == TaskStatus.TO_DO && data.assignee == null) {
+            return TaskChangeResult.NotAssigned
         }
+        if (status.isChangeable(targetStatus)) {
+            return TaskChangeResult.Success(copy(data, targetStatus))
+        }
+        return TaskChangeResult.NotChangeable
     }
-
-    val isRemovable: Boolean
-        get() = when (status) {
-            TaskStatus.TO_DO -> true
-            TaskStatus.IN_PROGRESS -> true
-            TaskStatus.REVIEW -> false
-            TaskStatus.DONE -> false
-        }
 }
