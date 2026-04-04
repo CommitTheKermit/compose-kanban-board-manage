@@ -47,7 +47,12 @@ class BoardState(initProject: KanbanProject) {
         taskId: Long,
         status: TaskStatus,
     ): ChangeStatusReturnType {
-        val result = project.changeStatus(taskId, status)
+
+        val result = try {
+            project.changeStatus(taskId, status)
+        } catch (e: IllegalArgumentException) {
+            return ChangeStatusReturnType.NOT_FOUND
+        }
         return when (result) {
             is StatusChangeResult.Success -> {
                 project = result.project
@@ -67,7 +72,13 @@ class BoardState(initProject: KanbanProject) {
     }
 
     fun deleteTask(taskId: Long): DeleteReturnType {
-        return when (val result = project.deleteTask(taskId)) {
+        val result = try {
+            project.deleteTask(taskId)
+        } catch (e: IllegalArgumentException) {
+            return DeleteReturnType.NOT_FOUND
+        }
+
+        return when (result) {
             is DeleteResult.Success -> {
                 project = result.project
                 DeleteReturnType.DELETE_SUCCESS

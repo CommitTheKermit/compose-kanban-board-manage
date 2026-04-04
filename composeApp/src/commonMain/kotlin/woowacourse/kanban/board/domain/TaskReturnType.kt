@@ -14,10 +14,12 @@ sealed class DeleteResult {
 enum class DeleteReturnType {
     DELETE_SUCCESS,
     NOT_DELETABLE,
+    NOT_FOUND,
 }
 
 enum class ChangeStatusReturnType {
     CHANGE_SUCCESS,
     NOT_CHANGEABLE,
     NOT_ASSIGNED,
+    NOT_FOUND,
 }
