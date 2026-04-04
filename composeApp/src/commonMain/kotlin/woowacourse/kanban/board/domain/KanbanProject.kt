@@ -22,6 +22,7 @@ class KanbanProject(inputTasks: List<KanbanTask>, val title: String = "") {
 
     fun isAssigned(taskId: Long): ChangeStatusReturnType? {
         val targetIndex = tasks.indexOfFirst { it.data.id == taskId }
+        require(targetIndex != -1) { "$taskId not found" }
         val targetTask = tasks[targetIndex]
 
         if (targetTask.data.assignee == null) {
@@ -45,6 +46,7 @@ class KanbanProject(inputTasks: List<KanbanTask>, val title: String = "") {
         }
 
         val targetIndex = tasks.indexOfFirst { it.data.id == taskId }
+        require(targetIndex != -1) { "$taskId not found" }
         val targetTask = tasks[targetIndex]
 
         if (targetTask.status.isChangeable(status)) {
@@ -74,6 +76,7 @@ class KanbanProject(inputTasks: List<KanbanTask>, val title: String = "") {
 
     fun deleteTask(taskId: Long): DeleteResult {
         val targetIndex = tasks.indexOfFirst { it.data.id == taskId }
+        require(targetIndex != -1) { "$taskId not found" }
         val targetTask = tasks[targetIndex]
         return if (targetTask.status.isRemovable) {
             DeleteResult.Success(copy(newInputTasks = tasks.filter { it.data.id != taskId }))
