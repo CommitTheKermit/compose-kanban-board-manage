@@ -1,10 +1,5 @@
 package woowacourse.kanban.board.domain
 
-sealed class CreateResult {
-    data class Success(val project: KanbanProject) : CreateResult()
-    data object NotCreatable : CreateResult()
-}
-
 sealed class StatusChangeResult {
     data class Success(val project: KanbanProject) : StatusChangeResult()
     data object NotAssigned : StatusChangeResult()

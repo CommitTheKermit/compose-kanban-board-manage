@@ -4,8 +4,11 @@ import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
+import woowacourse.kanban.board.domain.ChangeStatusReturnType
+import woowacourse.kanban.board.domain.DeleteResult
+import woowacourse.kanban.board.domain.DeleteReturnType
 import woowacourse.kanban.board.domain.KanbanProject
-import woowacourse.kanban.board.domain.TaskReturnType
+import woowacourse.kanban.board.domain.StatusChangeResult
 import woowacourse.kanban.domain.KanbanTask
 import woowacourse.kanban.domain.TaskStatus
 
@@ -40,49 +43,38 @@ class BoardState(initProject: KanbanProject) {
         project = project.addTask(task)
     }
 
-    fun isAssigned(taskId: Long): TaskReturnType? {
-        val targetIndex = project.getTasks().indexOfFirst { it.data.id == taskId }
-        val targetTask = project.getTasks()[targetIndex]
-        return if (targetTask.data.assignee == null) {
-            TaskReturnType.NOT_ASSIGNED
-        } else {
-            null
-        }
-    }
-
     fun changeStatus(
         taskId: Long,
         status: TaskStatus,
-    ): TaskReturnType {
-        if (status == TaskStatus.TO_DO) {
-            val result = isAssigned(
-                taskId = taskId,
-            )
-            if (result == TaskReturnType.NOT_ASSIGNED) {
-                return result
+    ): ChangeStatusReturnType {
+        val result = project.changeStatus(taskId, status)
+        return when (result) {
+            is StatusChangeResult.Success -> {
+                project = result.project
+                ChangeStatusReturnType.CHANGE_SUCCESS
             }
+
+            StatusChangeResult.NotChangeable ->
+                ChangeStatusReturnType.NOT_CHANGEABLE
+
+            StatusChangeResult.NotAssigned ->
+                ChangeStatusReturnType.NOT_ASSIGNED
         }
-        val targetIndex = project.getTasks().indexOfFirst { it.data.id == taskId }
-        val targetTask = project.getTasks()[targetIndex]
-        if (targetTask.isChangeable(status)) {
-            project = project.changeStatus(taskId, status)
-            return TaskReturnType.TASK_STATUS_SUCCESS
-        }
-        return TaskReturnType.NOT_UPDATABLE
     }
 
     fun getTasksByStatus(status: TaskStatus): List<KanbanTask> {
         return project.getTasksByStatus(status)
     }
 
-    fun deleteTask(taskId: Long): TaskReturnType {
-        val targetIndex = project.getTasks().indexOfFirst { it.data.id == taskId }
-        val targetTask = project.getTasks()[targetIndex]
-        if (targetTask.isRemovable) {
-            project = project.deleteTask(taskId)
-            return TaskReturnType.DELETE_SUCCESS
+    fun deleteTask(taskId: Long): DeleteReturnType {
+        return when (val result = project.deleteTask(taskId)) {
+            is DeleteResult.Success -> {
+                project = result.project
+                DeleteReturnType.DELETE_SUCCESS
+            }
+
+            is DeleteResult.NotDeletable -> DeleteReturnType.NOT_DELETABLE
         }
-        return TaskReturnType.NOT_DELETABLE
     }
 
     fun updateTask(task: KanbanTask) {
