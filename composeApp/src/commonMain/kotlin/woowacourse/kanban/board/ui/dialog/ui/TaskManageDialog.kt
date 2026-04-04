@@ -83,7 +83,7 @@ fun TaskManageDialog(
                     height = 48.dp,
                     value = state.titleInputValue,
                     onChangeValue = { newTextValue ->
-                        state.onTitleChange(newTextValue)
+                        state.titleChange(newTextValue)
                     },
                     isError = state.isTitleError,
                 )
@@ -94,7 +94,7 @@ fun TaskManageDialog(
                     height = 116.dp,
                     placeHolderAlignment = Alignment.TopStart,
                     value = state.contentInputValue,
-                    onChangeValue = { newTextValue -> state.onContentChange(newTextValue) },
+                    onChangeValue = { newTextValue -> state.contentChange(newTextValue) },
                 )
                 CreateTextInput(
                     modifier = Modifier,
@@ -104,7 +104,7 @@ fun TaskManageDialog(
                     hintText = "5자 이내의 태그를 최대 5개까지 등록할 수 있습니다.",
                     value = state.tagInputValue,
                     onChangeValue = { newTextValue ->
-                        state.onTagChange(newTextValue)
+                        state.tagChange(newTextValue)
                     },
                     isError = state.isTagError,
                 )
@@ -115,7 +115,7 @@ fun TaskManageDialog(
                     StatusButton(
                         status = TaskStatus.entries[index],
                         isSelected = state.selectedStatusIndex == index,
-                        onClick = { state.onStatusSelect(index) },
+                        onClick = { state.statusSelect(index) },
                     )
                 }
                 RadioSelector(
@@ -126,7 +126,7 @@ fun TaskManageDialog(
                         {
                             NoneAssigneeButton(
                                 isSelected = state.selectedAssigneeIndex == null,
-                                onClick = { state.onNoneAssigneeSelect() },
+                                onClick = { state.noneAssigneeSelect() },
                             )
                         }
                     } else null,
@@ -135,7 +135,7 @@ fun TaskManageDialog(
                     AssigneeButton(
                         assignee = assignees[index],
                         isSelected = state.selectedAssigneeIndex == index,
-                        onClick = { state.onCoachSelect(index) },
+                        onClick = { state.coachSelect(index) },
                     )
                 }
                 HorizontalDivider()
@@ -143,7 +143,7 @@ fun TaskManageDialog(
                     onCancel = { onDismiss() },
                     onCreate = if (state.isUpdate.not()) {
                         {
-                            val isError = state.onCreateValidate()
+                            val isError = state.createValidate()
                             if (isError.not()) {
                                 val task = KanbanTask(
                                     title = Title(state.titleInputValue),
@@ -159,7 +159,7 @@ fun TaskManageDialog(
                     } else null,
                     onUpdate = if (state.isUpdate) {
                         {
-                            val isError = state.onCreateValidate()
+                            val isError = state.createValidate()
                             if (isError.not()) {
                                 val task = KanbanTask(
                                     title = Title(state.titleInputValue),

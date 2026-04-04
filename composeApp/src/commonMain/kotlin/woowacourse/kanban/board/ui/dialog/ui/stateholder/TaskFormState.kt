@@ -32,33 +32,33 @@ class TaskFormState {
     var isUpdate: Boolean by mutableStateOf(false)
         private set
 
-    fun onTitleChange(input: String) {
+    fun titleChange(input: String) {
         titleInputValue = input
         if (isTitleError) isTitleError = false
     }
 
-    fun onContentChange(input: String) {
+    fun contentChange(input: String) {
         contentInputValue = input
     }
 
-    fun onTagChange(input: String) {
+    fun tagChange(input: String) {
         tagInputValue = input
         if (isTagError) isTagError = false
     }
 
-    fun onStatusSelect(index: Int) {
+    fun statusSelect(index: Int) {
         selectedStatusIndex = index
     }
 
-    fun onCoachSelect(index: Int) {
+    fun coachSelect(index: Int) {
         selectedAssigneeIndex = index
     }
 
-    fun onNoneAssigneeSelect() {
+    fun noneAssigneeSelect() {
         selectedAssigneeIndex = null
     }
 
-    fun onCreateValidate(): Boolean {
+    fun createValidate(): Boolean {
         isTitleError = !Title.isValid(titleInputValue)
         isTagError = !Tags.isLengthValid(tagInputValue.split(",")) ||
             !Tags.isContentValid(tagInputValue.split(","))
