@@ -78,6 +78,7 @@ fun KanbanPage(
                         when (deleteReturnType) {
                             DeleteReturnType.DELETE_SUCCESS -> SnackBarText.DELETE_TASK
                             DeleteReturnType.NOT_DELETABLE -> SnackBarText.ILLEGAL_DELETE
+                            DeleteReturnType.NOT_FOUND -> SnackBarText.TASK_NOT_FOUND
                         },
                     )
                 },
@@ -87,7 +88,8 @@ fun KanbanPage(
                         when (changeStatusReturnType) {
                             ChangeStatusReturnType.CHANGE_SUCCESS -> SnackBarText.STATUS_EDIT
                             ChangeStatusReturnType.NOT_CHANGEABLE -> SnackBarText.ILLEGAL_STATUS_EDIT
-                            ChangeStatusReturnType.NOT_ASSIGNED -> SnackBarText.ILLEGAL_STATUS_EDIT
+                            ChangeStatusReturnType.NOT_ASSIGNED -> SnackBarText.ILLEGAL_STATUS_EDIT_ASSIGNEE
+                            ChangeStatusReturnType.NOT_FOUND -> SnackBarText.TASK_NOT_FOUND
                         },
                     )
                 },
