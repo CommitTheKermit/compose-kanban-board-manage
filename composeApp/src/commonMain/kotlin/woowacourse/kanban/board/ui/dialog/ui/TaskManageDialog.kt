@@ -30,6 +30,7 @@ import woowacourse.kanban.domain.Title
 
 @Composable
 fun TaskManageDialog(
+    taskFormState: TaskFormState,
     onDismiss: () -> Unit,
     onCreateTask: (task: KanbanTask) -> Unit,
     onUpdateTask: (task: KanbanTask) -> Unit,
@@ -38,16 +39,13 @@ fun TaskManageDialog(
     assignees: List<Assignee> = emptyList(),
     currentTask: KanbanTask? = null,
 ) {
-    val state = remember {
-        TaskFormState()
-    }
-    val isToDo = remember(state.selectedStatusIndex) {
-        TaskStatus.entries[state.selectedStatusIndex] == TaskStatus.TO_DO
+    val isToDo = remember(taskFormState.selectedStatusIndex) {
+        TaskStatus.entries[taskFormState.selectedStatusIndex] == TaskStatus.TO_DO
     }
 
     LaunchedEffect(currentTask) {
         if (currentTask != null) {
-            state.setTask(currentTask, assignees)
+            taskFormState.setTask(currentTask, assignees)
         }
     }
 
@@ -64,7 +62,7 @@ fun TaskManageDialog(
                 ),
         ) {
             DialogBar(
-                label = if (state.isUpdate) "기존 태스크 수정"
+                label = if (taskFormState.isUpdate) "기존 태스크 수정"
                 else "새 태스크 생성",
                 modifier = Modifier.padding(
                     vertical = 28.dp,
@@ -81,11 +79,11 @@ fun TaskManageDialog(
                     title = "제목 *",
                     placeHolder = "태스크 제목을 입력하세요",
                     height = 48.dp,
-                    value = state.titleInputValue,
+                    value = taskFormState.titleInputValue,
                     onChangeValue = { newTextValue ->
-                        state.titleChange(newTextValue)
+                        taskFormState.titleChange(newTextValue)
                     },
-                    isError = state.isTitleError,
+                    isError = taskFormState.isTitleError,
                 )
                 CreateTextInput(
                     modifier = Modifier,
@@ -93,8 +91,8 @@ fun TaskManageDialog(
                     placeHolder = "태스크에 대한 자세한 설명을 입력하세요",
                     height = 116.dp,
                     placeHolderAlignment = Alignment.TopStart,
-                    value = state.contentInputValue,
-                    onChangeValue = { newTextValue -> state.contentChange(newTextValue) },
+                    value = taskFormState.contentInputValue,
+                    onChangeValue = { newTextValue -> taskFormState.contentChange(newTextValue) },
                 )
                 CreateTextInput(
                     modifier = Modifier,
@@ -102,11 +100,11 @@ fun TaskManageDialog(
                     placeHolder = "태그를 쉼표로 구분하여 입력하세요 (예: 버그, 긴급)",
                     height = 44.dp,
                     hintText = "5자 이내의 태그를 최대 5개까지 등록할 수 있습니다.",
-                    value = state.tagInputValue,
+                    value = taskFormState.tagInputValue,
                     onChangeValue = { newTextValue ->
-                        state.tagChange(newTextValue)
+                        taskFormState.tagChange(newTextValue)
                     },
-                    isError = state.isTagError,
+                    isError = taskFormState.isTagError,
                 )
                 RadioGridSelector(
                     header = "상태 *",
@@ -114,8 +112,8 @@ fun TaskManageDialog(
                 ) { index ->
                     StatusButton(
                         status = TaskStatus.entries[index],
-                        isSelected = state.selectedStatusIndex == index,
-                        onClick = { state.statusSelect(index) },
+                        isSelected = taskFormState.selectedStatusIndex == index,
+                        onClick = { taskFormState.statusSelect(index) },
                     )
                 }
                 RadioSelector(
@@ -125,8 +123,8 @@ fun TaskManageDialog(
                     if (isToDo) {
                         {
                             NoneAssigneeButton(
-                                isSelected = state.selectedAssigneeIndex == null,
-                                onClick = { state.noneAssigneeSelect() },
+                                isSelected = taskFormState.selectedAssigneeIndex == null,
+                                onClick = { taskFormState.noneAssigneeSelect() },
                             )
                         }
                     } else null,
@@ -134,39 +132,39 @@ fun TaskManageDialog(
                 ) { index ->
                     AssigneeButton(
                         assignee = assignees[index],
-                        isSelected = state.selectedAssigneeIndex == index,
-                        onClick = { state.coachSelect(index) },
+                        isSelected = taskFormState.selectedAssigneeIndex == index,
+                        onClick = { taskFormState.coachSelect(index) },
                     )
                 }
                 HorizontalDivider()
                 FooterRow(
                     onCancel = { onDismiss() },
-                    onCreate = if (state.isUpdate.not()) {
+                    onCreate = if (taskFormState.isUpdate.not()) {
                         {
-                            val isError = state.createValidate()
+                            val isError = taskFormState.createValidate()
                             if (isError.not()) {
                                 val task = KanbanTask(
-                                    title = Title(state.titleInputValue),
-                                    content = state.contentInputValue,
-                                    tags = Tags(state.tagInputValue.split(",")),
-                                    assignee = state.selectedAssigneeIndex?.let { assignees[it] },
-                                    status = TaskStatus.entries[state.selectedStatusIndex],
+                                    title = Title(taskFormState.titleInputValue),
+                                    content = taskFormState.contentInputValue,
+                                    tags = Tags(taskFormState.tagInputValue.split(",")),
+                                    assignee = taskFormState.selectedAssigneeIndex?.let { assignees[it] },
+                                    status = TaskStatus.entries[taskFormState.selectedStatusIndex],
                                 )
                                 onCreateTask(task)
                                 onDismiss()
                             }
                         }
                     } else null,
-                    onUpdate = if (state.isUpdate) {
+                    onUpdate = if (taskFormState.isUpdate) {
                         {
-                            val isError = state.createValidate()
+                            val isError = taskFormState.createValidate()
                             if (isError.not()) {
                                 val task = KanbanTask(
-                                    title = Title(state.titleInputValue),
-                                    content = state.contentInputValue,
-                                    tags = Tags(state.tagInputValue.split(",")),
-                                    assignee = state.selectedAssigneeIndex?.let { assignees[it] },
-                                    status = TaskStatus.entries[state.selectedStatusIndex],
+                                    title = Title(taskFormState.titleInputValue),
+                                    content = taskFormState.contentInputValue,
+                                    tags = Tags(taskFormState.tagInputValue.split(",")),
+                                    assignee = taskFormState.selectedAssigneeIndex?.let { assignees[it] },
+                                    status = TaskStatus.entries[taskFormState.selectedStatusIndex],
                                     id = currentTask?.data?.id,
                                 )
 
@@ -175,13 +173,13 @@ fun TaskManageDialog(
                             }
                         }
                     } else null,
-                    onDelete = if (state.isUpdate && currentTask != null) {
+                    onDelete = if (taskFormState.isUpdate && currentTask != null) {
                         {
                             onDeleteTask(currentTask.data.id)
                             onDismiss()
                         }
                     } else null,
-                    isFormError = state.isFormError,
+                    isFormError = taskFormState.isFormError,
                 )
             }
         }

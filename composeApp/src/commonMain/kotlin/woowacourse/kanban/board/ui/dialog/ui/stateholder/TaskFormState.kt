@@ -11,6 +11,19 @@ import woowacourse.kanban.domain.Tags
 import woowacourse.kanban.domain.Title
 
 class TaskFormState {
+    var showDialog by mutableStateOf(false)
+        private set
+    var currentTask by mutableStateOf<KanbanTask?>(null)
+        private set
+
+    fun toggleDialog(
+        controlValue: Boolean,
+        task: KanbanTask? = null,
+    ) {
+        showDialog = controlValue
+        currentTask = task
+    }
+
     var titleInputValue by mutableStateOf("")
         private set
     var contentInputValue by mutableStateOf("")

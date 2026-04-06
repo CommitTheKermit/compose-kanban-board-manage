@@ -20,6 +20,7 @@ import woowacourse.kanban.board.domain.KanbanProject
 import woowacourse.kanban.board.domain.KanbanTask
 import woowacourse.kanban.board.ui.constant.MockData
 import woowacourse.kanban.board.ui.dialog.ui.TaskManageDialog
+import woowacourse.kanban.board.ui.dialog.ui.stateholder.TaskFormState
 import woowacourse.kanban.board.ui.stateholder.BoardState
 import woowacourse.kanban.domain.Assignee
 import woowacourse.kanban.domain.TaskStatus
@@ -42,12 +43,16 @@ fun KanbanBoard(
     var currentDragPosition by remember { mutableStateOf<Offset?>(null) }
     val columnBounds = remember { mutableStateMapOf<TaskStatus, Rect>() }
 
+    val taskFormState = remember {
+        TaskFormState()
+    }
+
     Column(modifier = modifier) {
         KanbanBoardHeader(
             progress = boardState.progress,
             doneTaskCount = boardState.getTasksByStatus(TaskStatus.DONE).size,
             totalTaskCount = boardState.totalTaskCount,
-            onClick = { boardState.toggleDialog(true) },
+            onClick = { taskFormState.toggleDialog(true) },
             headerTitle = projectTitle,
         )
         Row(
@@ -87,16 +92,17 @@ fun KanbanBoard(
                         draggedTask = null
                     },
                     onCardClick = { task ->
-                        boardState.toggleDialog(true, task)
+                        taskFormState.toggleDialog(true, task)
                     },
                 )
             }
         }
     }
 
-    if (boardState.showDialog) {
+    if (taskFormState.showDialog) {
         TaskManageDialog(
-            onDismiss = { boardState.toggleDialog(false) },
+            taskFormState = taskFormState,
+            onDismiss = { taskFormState.toggleDialog(false) },
             onCreateTask = { task ->
                 onTaskCreated(task)
             },
@@ -108,7 +114,7 @@ fun KanbanBoard(
             },
             assignees = assignees,
             modifier = Modifier,
-            currentTask = boardState.currentTask,
+            currentTask = taskFormState.currentTask,
         )
     }
 }

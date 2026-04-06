@@ -22,21 +22,6 @@ class BoardState(initProject: KanbanProject) {
         if (totalTasks.isEmpty()) 0.0 else project.getTasksByStatus(TaskStatus.DONE).size.toDouble() / totalTasks.size.toDouble()
     }
 
-    var currentTask by mutableStateOf<KanbanTask?>(null)
-        private set
-
-    var showDialog by mutableStateOf(false)
-        private set
-
-    // 키고 끄고, 수정/삭제, 신규를 표시해야함, 수정/삭제일경우 태스크값을 넘겨야함
-    fun toggleDialog(
-        controlValue: Boolean,
-        task: KanbanTask? = null,
-    ) {
-        showDialog = controlValue
-        currentTask = task
-    }
-
     fun addTask(task: KanbanTask) {
         project = project.addTask(task)
     }
