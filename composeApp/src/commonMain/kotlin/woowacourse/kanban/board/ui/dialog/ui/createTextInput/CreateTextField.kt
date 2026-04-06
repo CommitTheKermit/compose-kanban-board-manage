@@ -53,6 +53,7 @@ fun CreateTextField(
         textStyle = TextStyle.Default.copy(
             fontSize = 16.sp,
             fontWeight = FontWeight.W400,
+            color = if (isError) Colors.TextFieldError else TextStyle.Default.color,
         ),
         decorationBox = { innerTextField ->
             Box(
@@ -60,18 +61,20 @@ fun CreateTextField(
                 contentAlignment = placeHolderAlignment,
             ) {
                 if (value.isEmpty()) {
-                    if (isError) {
-                        Row(
-                            modifier = Modifier.fillMaxWidth(),
-                            verticalAlignment = Alignment.CenterVertically,
-                            horizontalArrangement = Arrangement.SpaceBetween,
-                        ) {
-                            Text(
-                                text = errorPlaceholder,
-                                fontWeight = FontWeight.W400,
-                                fontSize = 16.sp,
-                                color = Colors.TextFieldError,
-                            )
+                    Text(
+                        placeHolder,
+                        fontWeight = FontWeight.W400,
+                        fontSize = 16.sp,
+                        color = Colors.TextFieldPlaceholder,
+                    )
+                } else {
+                    Row(
+                        modifier = Modifier.fillMaxWidth(),
+                        verticalAlignment = Alignment.CenterVertically,
+                        horizontalArrangement = Arrangement.SpaceBetween,
+                    ) {
+                        innerTextField()
+                        if (isError) {
                             Box(
                                 modifier = Modifier.size(48.dp),
                                 contentAlignment = Alignment.Center,
@@ -84,16 +87,7 @@ fun CreateTextField(
                                 )
                             }
                         }
-                    } else {
-                        Text(
-                            placeHolder,
-                            fontWeight = FontWeight.W400,
-                            fontSize = 16.sp,
-                            color = Colors.TextFieldPlaceholder,
-                        )
                     }
-                } else {
-                    innerTextField()
                 }
             }
         },

@@ -76,9 +76,6 @@ class TaskFormState {
         isTagError = !Tags.isLengthValid(tagInputValue.split(",")) ||
             !Tags.isContentValid(tagInputValue.split(","))
 
-        if (isTitleError) titleInputValue = ""
-        if (isTagError) tagInputValue = ""
-
         return isTitleError || isTagError
     }
 
