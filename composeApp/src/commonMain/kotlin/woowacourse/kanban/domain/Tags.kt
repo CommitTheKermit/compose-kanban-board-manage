@@ -1,6 +1,8 @@
 package woowacourse.kanban.domain
 
 class Tags(val tags: List<String> = listOf()) {
+    val isAllNotBlank: Boolean get() = tags.all { it.isNotBlank() }
+
     init {
         require(isLengthValid(tags)) { "태그는 5개를 초과할 수 없습니다." }
         require(isContentValid(tags)) { "태그의 내용은 5자를 초과할 수 없습니다." }

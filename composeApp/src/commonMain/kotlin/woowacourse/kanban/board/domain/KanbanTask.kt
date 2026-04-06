@@ -20,7 +20,7 @@ class KanbanTask(val data: BoardData, val status: TaskStatus) {
         data = BoardData(
             title = title,
             content = content,
-            tags = if (tags.tags.all { it.isNotBlank() }) tags else Tags(emptyList()),
+            tags = if (tags.isAllNotBlank) tags else Tags(emptyList()),
             assignee = assignee,
             id = id
                 ?: System.currentTimeMillis(),
