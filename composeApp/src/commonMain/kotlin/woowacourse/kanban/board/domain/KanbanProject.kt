@@ -24,7 +24,7 @@ class KanbanProject(inputTasks: List<KanbanTask>, val title: String = "") {
         status: TaskStatus,
     ): StatusChangeResult {
         val targetIndex = tasks.indexOfFirst { it.data.id == taskId }
-        require(targetIndex != -1) { "$taskId not found" }
+        if (targetIndex == -1) return StatusChangeResult.NotFound
         val targetTask = tasks[targetIndex]
 
         return when (val result = targetTask.changeStatus(status)) {
@@ -55,7 +55,7 @@ class KanbanProject(inputTasks: List<KanbanTask>, val title: String = "") {
 
     fun deleteTask(taskId: Long): DeleteResult {
         val targetIndex = tasks.indexOfFirst { it.data.id == taskId }
-        require(targetIndex != -1) { "$taskId not found" }
+        if (targetIndex == -1) return DeleteResult.NotFound
         val targetTask = tasks[targetIndex]
 
         return if (targetTask.status.isRemovable) {

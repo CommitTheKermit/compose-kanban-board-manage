@@ -4,6 +4,7 @@ sealed class StatusChangeResult {
     data class Success(val project: KanbanProject) : StatusChangeResult()
     data object NotAssigned : StatusChangeResult()
     data object NotChangeable : StatusChangeResult()
+    data object NotFound : StatusChangeResult()
 }
 
 sealed class TaskChangeResult {
@@ -15,17 +16,5 @@ sealed class TaskChangeResult {
 sealed class DeleteResult {
     data class Success(val project: KanbanProject) : DeleteResult()
     data object NotDeletable : DeleteResult()
-}
-
-enum class DeleteReturnType {
-    DELETE_SUCCESS,
-    NOT_DELETABLE,
-    NOT_FOUND,
-}
-
-enum class ChangeStatusReturnType {
-    CHANGE_SUCCESS,
-    NOT_CHANGEABLE,
-    NOT_ASSIGNED,
-    NOT_FOUND,
+    data object NotFound : DeleteResult()
 }

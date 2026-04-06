@@ -4,9 +4,7 @@ import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
-import woowacourse.kanban.board.domain.ChangeStatusReturnType
 import woowacourse.kanban.board.domain.DeleteResult
-import woowacourse.kanban.board.domain.DeleteReturnType
 import woowacourse.kanban.board.domain.KanbanProject
 import woowacourse.kanban.board.domain.KanbanTask
 import woowacourse.kanban.board.domain.StatusChangeResult
@@ -46,46 +44,24 @@ class BoardState(initProject: KanbanProject) {
     fun changeStatus(
         taskId: Long,
         status: TaskStatus,
-    ): ChangeStatusReturnType {
-
-        val result = try {
-            project.changeStatus(taskId, status)
-        } catch (e: IllegalArgumentException) {
-            return ChangeStatusReturnType.NOT_FOUND
+    ): StatusChangeResult {
+        val result = project.changeStatus(taskId, status)
+        if (result is StatusChangeResult.Success) {
+            project = result.project
         }
-        return when (result) {
-            is StatusChangeResult.Success -> {
-                project = result.project
-                ChangeStatusReturnType.CHANGE_SUCCESS
-            }
-
-            StatusChangeResult.NotChangeable ->
-                ChangeStatusReturnType.NOT_CHANGEABLE
-
-            StatusChangeResult.NotAssigned ->
-                ChangeStatusReturnType.NOT_ASSIGNED
-        }
+        return result
     }
 
     fun getTasksByStatus(status: TaskStatus): List<KanbanTask> {
         return project.getTasksByStatus(status)
     }
 
-    fun deleteTask(taskId: Long): DeleteReturnType {
-        val result = try {
-            project.deleteTask(taskId)
-        } catch (e: IllegalArgumentException) {
-            return DeleteReturnType.NOT_FOUND
+    fun deleteTask(taskId: Long): DeleteResult {
+        val result = project.deleteTask(taskId)
+        if (result is DeleteResult.Success) {
+            project = result.project
         }
-
-        return when (result) {
-            is DeleteResult.Success -> {
-                project = result.project
-                DeleteReturnType.DELETE_SUCCESS
-            }
-
-            is DeleteResult.NotDeletable -> DeleteReturnType.NOT_DELETABLE
-        }
+        return result
     }
 
     fun updateTask(task: KanbanTask) {

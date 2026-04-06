@@ -16,9 +16,9 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import kotlinx.coroutines.launch
-import woowacourse.kanban.board.domain.ChangeStatusReturnType
-import woowacourse.kanban.board.domain.DeleteReturnType
+import woowacourse.kanban.board.domain.DeleteResult
 import woowacourse.kanban.board.domain.KanbanProject
+import woowacourse.kanban.board.domain.StatusChangeResult
 import woowacourse.kanban.board.ui.constant.SnackBarText
 import woowacourse.kanban.board.ui.stateholder.BoardState
 import woowacourse.kanban.domain.Assignee
@@ -73,23 +73,23 @@ fun KanbanPage(
                     showSnackBar(SnackBarText.UPDATE_TASK)
                 },
                 onTaskDeleted = { id ->
-                    val deleteReturnType = boardStates[selectedProjectIndex].deleteTask(taskId = id)
+                    val result = boardStates[selectedProjectIndex].deleteTask(taskId = id)
                     showSnackBar(
-                        when (deleteReturnType) {
-                            DeleteReturnType.DELETE_SUCCESS -> SnackBarText.DELETE_TASK
-                            DeleteReturnType.NOT_DELETABLE -> SnackBarText.ILLEGAL_DELETE
-                            DeleteReturnType.NOT_FOUND -> SnackBarText.TASK_NOT_FOUND
+                        when (result) {
+                            is DeleteResult.Success -> SnackBarText.DELETE_TASK
+                            DeleteResult.NotDeletable -> SnackBarText.ILLEGAL_DELETE
+                            DeleteResult.NotFound -> SnackBarText.TASK_NOT_FOUND
                         },
                     )
                 },
                 onStatusChanged = { status, id ->
-                    val changeStatusReturnType = boardStates[selectedProjectIndex].changeStatus(status = status, taskId = id)
+                    val result = boardStates[selectedProjectIndex].changeStatus(status = status, taskId = id)
                     showSnackBar(
-                        when (changeStatusReturnType) {
-                            ChangeStatusReturnType.CHANGE_SUCCESS -> SnackBarText.STATUS_EDIT
-                            ChangeStatusReturnType.NOT_CHANGEABLE -> SnackBarText.ILLEGAL_STATUS_EDIT
-                            ChangeStatusReturnType.NOT_ASSIGNED -> SnackBarText.ILLEGAL_STATUS_EDIT_ASSIGNEE
-                            ChangeStatusReturnType.NOT_FOUND -> SnackBarText.TASK_NOT_FOUND
+                        when (result) {
+                            is StatusChangeResult.Success -> SnackBarText.STATUS_EDIT
+                            StatusChangeResult.NotChangeable -> SnackBarText.ILLEGAL_STATUS_EDIT
+                            StatusChangeResult.NotAssigned -> SnackBarText.ILLEGAL_STATUS_EDIT_ASSIGNEE
+                            StatusChangeResult.NotFound -> SnackBarText.TASK_NOT_FOUND
                         },
                     )
                 },
