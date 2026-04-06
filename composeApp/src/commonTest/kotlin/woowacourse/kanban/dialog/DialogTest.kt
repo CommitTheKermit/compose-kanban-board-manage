@@ -2,6 +2,7 @@ package woowacourse.kanban.dialog
 
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.test.ExperimentalTestApi
 import androidx.compose.ui.test.assertIsNotEnabled
@@ -16,6 +17,7 @@ import woowacourse.kanban.board.ui.dialog.ui.TaskManageDialog
 import woowacourse.kanban.board.ui.dialog.ui.radioSelector.AssigneeButton
 import woowacourse.kanban.board.ui.dialog.ui.radioSelector.RadioGridSelector
 import woowacourse.kanban.board.ui.dialog.ui.radioSelector.StatusButton
+import woowacourse.kanban.board.ui.dialog.ui.stateholder.TaskFormState
 import woowacourse.kanban.domain.Assignee
 import woowacourse.kanban.domain.Nickname
 import woowacourse.kanban.domain.TaskStatus
@@ -102,12 +104,17 @@ class DialogTest {
         // given
         setContent {
 
+            val taskFormState = remember {
+                TaskFormState()
+            }
+
             TaskManageDialog(
                 onDismiss = { showDialog.value = false },
                 onCreateTask = {},
                 onUpdateTask = {},
                 onDeleteTask = {},
                 modifier = Modifier,
+                taskFormState = taskFormState,
             )
         }
         // when
@@ -126,12 +133,17 @@ class DialogTest {
         // given
         setContent {
 
+            val taskFormState = remember {
+                TaskFormState()
+            }
+
             TaskManageDialog(
                 onDismiss = { showDialog.value = false },
                 onCreateTask = {},
                 onUpdateTask = {},
                 onDeleteTask = {},
                 modifier = Modifier,
+                taskFormState = taskFormState,
             )
         }
 
@@ -148,12 +160,17 @@ class DialogTest {
     fun `제목 검증 혹은 태그 검증에 실패시 생성 버튼을 누르면 제목과 태그에서 에러 표시가 출력되야 한다`() = runComposeUiTest {
         // given
         setContent {
+            val taskFormState = remember {
+                TaskFormState()
+            }
+
             TaskManageDialog(
                 onDismiss = { showDialog.value = false },
                 onCreateTask = {},
                 onUpdateTask = {},
                 onDeleteTask = {},
                 modifier = Modifier,
+                taskFormState = taskFormState,
             )
         }
 
@@ -165,6 +182,6 @@ class DialogTest {
         onNodeWithText("생성").performClick()
         waitForIdle()
         // then
-        onNodeWithText("이건,,,,올바르지 않은 형식입니다,,,,,,,,,").assertExists()
+        onNodeWithText("태그 형식이 올바르지 않습니다.").assertExists()
     }
 }
