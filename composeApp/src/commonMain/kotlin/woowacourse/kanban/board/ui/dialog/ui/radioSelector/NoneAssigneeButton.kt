@@ -13,6 +13,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.semantics.selected
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import woowacourse.kanban.Colors
@@ -52,4 +53,16 @@ fun NoneAssigneeButton(
             color = Colors.PrimarySubText,
         )
     }
+}
+
+@Preview(showBackground = true)
+@Composable
+private fun NoneAssigneeButtonSelectedPreview() {
+    NoneAssigneeButton(isSelected = true, onClick = {})
+}
+
+@Preview(showBackground = true)
+@Composable
+private fun NoneAssigneeButtonUnselectedPreview() {
+    NoneAssigneeButton(isSelected = false, onClick = {})
 }
