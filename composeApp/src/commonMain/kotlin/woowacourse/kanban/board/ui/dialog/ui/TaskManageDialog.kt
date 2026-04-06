@@ -84,6 +84,7 @@ fun TaskManageDialog(
                         taskFormState.titleChange(newTextValue)
                     },
                     isError = taskFormState.isTitleError,
+                    errorHintText = "제목 형식이 올바르지 않습니다.",
                 )
                 CreateTextInput(
                     modifier = Modifier,

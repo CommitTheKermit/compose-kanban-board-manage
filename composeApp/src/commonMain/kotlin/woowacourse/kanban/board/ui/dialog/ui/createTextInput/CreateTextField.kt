@@ -33,7 +33,6 @@ fun CreateTextField(
     placeHolder: String,
     placeHolderAlignment: Alignment,
     modifier: Modifier = Modifier,
-    errorPlaceholder: String = "이건,,,,올바르지 않은 형식입니다,,,,,,,,,",
 ) {
     BasicTextField(
         value = value,
